@@ -3,7 +3,7 @@
 use MiladRahimi\PhpRouter\Router;
 use Laminas\Diactoros\Response\JsonResponse;
 
-use App\Controllers\{
+use Esvlad\Bx24copytobox\Controllers\{
     Leads,
 };
 
