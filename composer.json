@@ -1,0 +1,20 @@
+{
+    "name": "esvlad/bx24copytobox",
+    "description": "Копирует и обновляет элементы CRM системы Битрикс24 с облака в коробку.",
+    "license": "GNU GPL",
+    "autoload": {
+        "psr-4": {
+            "Esvlad\\Bx24copytobox\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Старцев Вдажисдав"
+        }
+    ],
+    "require": {
+        "illuminate/database": "^10.48",
+        "miladrahimi/phprouter": "5.*",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
