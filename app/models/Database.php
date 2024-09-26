@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Esvlad\Bx24copytobox\Models;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
