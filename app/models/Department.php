@@ -1,17 +1,35 @@
 <?php
 
-namespace App\Models;
+namespace Esvlad\Bx24copytobox\Models;
 
-use \Illuminate\Database\Eloquent\Model;
-
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use Illuminate\Database\Eloquent\Model;
 
 class Department extends Model {
 	protected $table = "departments";
 
-	public static function getCloudDepartments($start = 0){
+	public static function setCloudDepartmentToBox($cloud_id){
+		$departament = Crm::bxCloudCall('department.get', ['ID' => $cloud_id]);
+
+		$box_departament = [
+			'NAME' => $departament['result'][0]['NAME'],
+			'SORT' => $departament['result'][0]['SORT'],
+			'PARENT' => self::getNewDepartmentId($departament['result'][0]['PARENT'])
+		];
+
+		$box_departament_id = Crm::bxBoxCall('department.add', $box_departament);
+
+		self::insert([
+			'old_id' => $cloud_id,
+			'new_id' => $box_departament_id['result'],
+			'name' => $departament['result'][0]['NAME'],
+			'old_parent_id' => $departament['result'][0]['PARENT'],
+			'old_user_id' => $departament['result'][0]['UF_HEAD']
+		]);
+
+		return $box_departament_id['result'];
+	}
+
+	/*public static function getCloudDepartments($start = 0){
 		$client = new Client();
 		$data = [];
 
@@ -138,14 +156,9 @@ class Department extends Model {
 		}
 
 		return $arr;
-	}
+	}*/
 
-	public static function getNewDepartmentId($old_id){
-		return Department::where('old_id', $old_id)->value('new_id');
-	}
-
-	public static function deleteBoxDepartments($id){
-		$client = new Client();
-		$client->request('POST', env('BOX') . 'department.delete', ['query' => ['ID' => $id]]);
+	public static function getNewDepartmentId($cloud_id){
+		return self::where('old_id', $cloud_id)->value('new_id');
 	}
 }

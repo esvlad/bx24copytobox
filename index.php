@@ -15,7 +15,7 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-use App\Models\Database;
+use Esvlad\Bx24copytobox\Models\Database;
 $db = new Database();
 
 require "routers.php";
