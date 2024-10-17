@@ -52,7 +52,7 @@ class TasksController{
 								if(empty($new_comment_id['error'])){
 									Comment::insert([
 										'old_id' => $comment_id,
-										'new_id' => $new_comment_id['result'],
+										'new_id' => $new_comment_id,
 										'task_old_id' => $cloud_id,
 										'task_new_id' => $box_id
 									]);
