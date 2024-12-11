@@ -26,7 +26,7 @@ sleep(2);
 UserField::getCloudUserFieldsToBox('contact');
 print("Экспорт пользовательских полей контактов завершен\r\n");
 sleep(2);
+*/
 UserField::getCloudUserFieldsToBox('deal');
 print("Экспорт пользовательских полей сделок завершен\r\n");
 print("Экспорт всех пользовательских полей завершен");
-*/

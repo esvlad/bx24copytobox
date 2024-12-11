@@ -7,200 +7,79 @@ use Esvlad\Bx24copytobox\Models\Deal;
 use Esvlad\Bx24copytobox\Models\Crm;
 
 class DealsController{
+	public function addtobox($cloud_deal_id){
+		$cloud_deal = Crm::bxCloudCall('crm.deal.get', ["ID" => $cloud_deal_id]);
 
-	public function addtobox($cloud_id){
-		header('Content-Type: application/json');
-		$json = [];
-		$deal_rest = Crm::bxCloudCall('crm.deal.get', ['ID' => $cloud_id]);
+		$fields = Deal::handlerFields($cloud_deal['result']);
+		unset($fields['ID']);
 
-		$deal = $this->syncFileds($deal_rest['result']);
-		unset($deal_rest);
-		unset($deal['ID']);
+		//Проверка
+		$has_deal_db = Deal::where('old_id', $cloud_deal_id)->whereNotNull('new_id');
+		if(!$has_deal_db->exists()){
+			$box_deal_id_query = Crm::bxBoxCall('crm.deal.add', ['fields' => $fields]);
+			$box_deal_id = $box_deal_id_query['result'];
 
-		if(!Deal::where('old_id', $cloud_id)->exists()){
-			$deal_box_rest = Crm::bxBoxCall('crn.deal.add', [
-				'fields' => $deal
-			]);
-			$box_id = $deal_box_rest['result'];
-
-			$contact_query = Contact::where('old_id', $deal['CONTACT_ID'])->first();
-			if(!empty($contact_query->new_id)){
-				$contact_id = $contact_query->new_id;
-			} else {
-				$contact_id = Contact::setContactBox($deal['CONTACT_ID']);
-			}
-
-			Crm::bxBoxCall('crm.deal.contact.add', [
-				'ID' => $box_id,
-				'fields' => ['CONTACT_ID' => $contact_id]
+			Deal::insert([
+				'old_id' => $cloud_deal_id,
+				'new_id' => $box_deal_id,
 			]);
 
-			Deal::insert(['old_id' => $cloud_id, 'new_id' => $box_id]);
-		} else {
-			$box_query = Deal::where('old_id', $cloud_id)->first();
-			$box_id = $box_query->new_id;
+			if(!empty($cloud_deal['result']['CONTACT_ID'])){
+				$cloud_contact_id = $cloud_deal['result']['CONTACT_ID'];
 
-			$deal_box_rest = Crm::bxBoxCall('crn.deal.update', [
-				'ID' => $box_id,
-				'fields' => $deal
-			]);
-		}
-
-		$json['status'] = 'success';
-
-		return json_encode($json, JSON_UNESCAPED_UNICODE);
-	}
-
-	public function synchronizationDeal($box_id){
-		header('Content-Type: application/json');
-		$json = [];
-
-		$deal_query = Deal::where('new_id', $box_id)->whereNotNull('old_id')->first();
-		if(!empty($deal_query)){
-			$deal_rest = Crm::bxCloudCall('crm.deal.get', ['ID' => $deal_query->old_id]);
-
-			if(empty($deal_rest['result'])){
-				$json = [
-					'status' => 'error',
-					'error_message' => 'Такой сделки в облаке нет.'
-				];
-			} else {
-				$deal = $this->syncFileds($deal_rest['result']);
-				unset($deal_rest);
-				unset($deal['ID']);
-
-				Crm::bxBoxCall('crn.deal.update', [
-					'ID' => $box_id,
-					'fields' => $deal
-				]);
-
-				$json['status'] = 'success';
-			}
-		} else {
-			$json = [
-				'status' => 'error',
-				'error_message' => 'Облачного ID нет, вероятно это новая сделка.'
-			];
-		}
-
-		return json_encode($json, JSON_UNESCAPED_UNICODE);
-	}
-
-	public function synchronizationContact($box_id){
-		header('Content-Type: application/json');
-		$json = [];
-
-		$deal_query = Deal::where('new_id', $box_id)->whereNotNull('old_id')->first();
-		if(!empty($deal_query)){
-			$deal_rest = Crm::bxCloudCall('crm.deal.get', ['ID' => $deal_query->old_id]);
-
-			if(empty($deal_rest['result'])){
-				$json = [
-					'status' => 'error',
-					'error_message' => 'Такой сделки в облаке нет.'
-				];
-			} else {
-				$deal = $deal_rest['result'];
-				unset($deal_rest);
-				unset($deal['ID']);
-
-				if(empty($deal['CONTACT_ID'])){
-					$json = [
-						'status' => 'error',
-						'error_message' => 'К этой сделке в облаке не прикреплен контакт.'
-					];
+				$has_contact_db = Contact::where('old_id', $cloud_contact_id)->whereNotNull('new_id');
+				if(!$has_contact_db->exists()){
+					$box_contact_id = Contact::setContactBox($cloud_contact_id);
+					Contact::setAddressContactToBox($cloud_contact_id, $box_contact_id);
 				} else {
-					$contact_query = Contact::where('old_id', $deal['CONTACT_ID'])->first();
-					if(!empty($contact_query->new_id)){
-						$contact_id = $contact_query->new_id;
-					} else {
-						$contact_id = Contact::setContactBox($deal['CONTACT_ID']);
-					}
-
-					Crm::bxBoxCall('crm.deal.contact.add', [
-						'ID' => $box_id,
-						'fields' => ['CONTACT_ID' => $contact_id]
-					]);
-
-					$json['status'] = 'success';
+					$box_contact_id = $has_contact_db->value('new_id');
 				}
+
+				Crm::bxBoxCall('crm.deal.contact.add', ['ID' => $box_deal_id, 'fields' => ['CONTACT_ID' => $box_contact_id]]);
+
+				Crm::bxCloudCall('bizproc.workflow.start', [
+					'TEMPLATE_ID' => 1187,
+					'DOCUMENT_ID' => ['crm', 'CCrmDocumentDeal', 'DEAL_' . $cloud_deal_id],
+					'PARAMETERS' => null
+				]);
 			}
 		} else {
-			$json = [
-				'status' => 'error',
-				'error_message' => 'Облачного ID нет, вероятно это новая сделка.'
-			];
+			Crm::bxBoxCall('crm.deal.update', ['ID' = $box_deal_id, 'fields' => $fields]);
 		}
 
-		return json_encode($json, JSON_UNESCAPED_UNICODE);
+		return true;
 	}
 
-	private function syncFileds($deal){
-		foreach($deal as $key => $value){
-			switch($key){
-				case 'ASSIGNED_BY_ID':
-					$new_user_id = Crm::getBoxUserId($deal['ASSIGNED_BY_ID']);
-					if(empty($new_user_id)) $new_user_id = 1;
-					$deal['ASSIGNED_BY_ID'] = $new_user_id;
-					break;
+	public function synchronization($box_deal_id, $box_user_id){
+		$has_deal_db = Deal::where('new_id', $box_deal_id)->whereNotNull('box_id');
+		if(!$has_deal_db->exists()){
+			Crm::bxBoxCall('im.notify.system.add', [
+				'USER_ID' => $box_user_id,
+				'MESSAGE' => 'Синхронизация невозможна, так как данной сделки нет в облаке. Если у вас есть вопросы, то обратитесь к администратору.'
+			]);
+		} else {
+			$cloud_deal_id = $has_deal_db->value('old_id');
+			$cloud_deal = Crm::bxCloudCall('crm.deal.get', ["ID" => $cloud_deal_id]);
 
-				case 'UF_CRM_1720601636':
-					$deal[$key] = $deal['ID'];
-					break;
+			$fields = Deal::handlerFields($cloud_deal['result']);
+			unset($fields['ID']);
 
-				case 'SOURCE_ID':
-					$source_id = Capsule::table('sources')->where('old_value', $value)->value('new_value');
-					if(!empty($source_id)){
-						$deal[$key] = $source_id;
-					}
-					break;
+			Crm::bxBoxCall('crm.deal.update', ['ID' = $box_deal_id, 'fields' => $fields]);
+			$box_deal = Crm::bxBoxCall('crm.deal.get', ["ID" => $box_deal_id]);
 
-				case 'STAGE_ID':
-					$stage = Capsule::table('stages')->where('old_status_id', $value)->value('new_status_id');
-					if(!empty($stage)){
-						$deal['STAGE_ID'] = $stage;
-					} else {
-						unset($deal['STAGE_ID']);
-					}
-					break;
+			if(!empty($box_deal['result']) && empty($box_deal['result']['CONTACT_ID'])){
+				$has_contact_db = Contact::where('old_id', $cloud_contact_id)->whereNotNull('new_id');
+				if(!$has_contact_db->exists()){
+					$box_contact_id = Contact::setContactBox($cloud_contact_id);
+					Contact::setAddressContactToBox($cloud_contact_id, $box_contact_id);
+				} else {
+					$box_contact_id = $has_contact_db->value('new_id');
+				}
 
-				case 'CREATED_BY_ID':
-				case 'MODIFY_BY_ID':
-				case 'LAST_ACTIVITY_BY':
-				case 'MOVED_BY_ID':
-					$deal[$key] = Crm::getBoxUserId($value);
-					break;
-
-				case 'CATEGORY_ID':
-				case 'STAGE_SEMANTIC_ID':
-				case 'LAST_ACTIVITY_BY':
-				case 'UF_CRM_1720601597':
-				case 'UF_CRM_669F538FF3FBF':
-				case 'LOCATION_ID':
-				case 'UF_CRM_1720601636':
-				case 'UF_CRM_60A39EE36DB80':
-				case 'UF_CRM_6094E0E726214':
-					unset($deal[$key]);
-					break;
-				case 'UF_CRM_1721830990':
-					$deal[$key] = 'https://stopzaym.bitrix24.ru/crm/deal/details/' . $deal['UF_CRM_1720601636'] . '/';
-					break;
-				case 'UF_CRM_1722838734':
-					$deal[$key] = str_replace('stopzaym.bitrix24.ru/docs/path', 'sz-crm.ru/docs/shared/path', $deal['UF_CRM_1565691799']);
-					break;
-				default :
-					if(empty($value)){
-						unset($deal[$key]);
-					}
-
-					$hasFieldList = Crm::hasFieldList($key);
-					if($hasFieldList === true){
-						$deal[$key] = Crm::getFieldListData($key, $value);
-					}
-					break;
+				Crm::bxBoxCall('crm.deal.contact.add', ['ID' => $box_deal_id, 'fields' => ['CONTACT_ID' => $box_contact_id]]);
 			}
 		}
 
-		return $deal;
+		return true;
 	}
 }

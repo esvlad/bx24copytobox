@@ -8,7 +8,18 @@ function preprint($data){
     echo '</pre>';
 }
 
-require "../vendor/autoload.php";
+
+function storage_set($path){
+    $dir = dirname(__DIR__);
+
+    if(!file_exists($dir . '/uploads/' . $path)){
+        mkdir($dir . '/uploads/' . $path, 0777, True);
+    }
+
+    return $dir  . '/uploads/' . $path . '/';
+}
+
+require dirname(__DIR__) . "/vendor/autoload.php";
 
 use Dotenv\Dotenv;
 
@@ -18,6 +29,18 @@ $dotenv->load();
 use Esvlad\Bx24copytobox\Models\Database;
 $db = new Database();
 
-$task = new Esvlad\Bx24copytobox\Controllers\TasksController;
-print_r($task->synchronizationTask(121742));
+use Esvlad\Bx24copytobox\Models\Task;
+use Esvlad\Bx24copytobox\Models\Comment;
+//use Esvlad\Bx24copytobox\Controllers\TasksController;
+//$task = new TasksController;
+//$task->setTask();
+//$task->exportCloudTask(20774);
+//Task::export(13348, 'RESPONSIBLE_ID');
+//Task::export(13348, 'ACCOMPLICE');
+//Task::setDuplicatesTask();
+//Task::removeDuplicatesTask();
+Comment::setDuplicatesComments();
+//Comment::removeDuplicatesComments();
+
+//print_r($task->synchronizationTask(121742));
 //print("Заполнение Базы данных лидов завершен!");

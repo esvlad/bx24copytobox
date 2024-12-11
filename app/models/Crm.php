@@ -52,6 +52,24 @@ class Crm{
 
 	///////////////////////////////////////////////////////////
 
+	public static function setLog($arData, $type = '', $folder = ''){
+		$path = dirname(dirname(__DIR__)) . '/logs/';
+		$path .= $folder . date("Y-m-d/H") . '/';
+
+		if (!file_exists($path)){
+			@mkdir($path, 0775, true);
+		}
+
+		$path .= time() . '_' . $type . '_' . rand(1, 9999999) . 'log';
+
+		$log = date("d.m.Y H:i:s") . "\n";
+	    $log .= print_r($arData, 1);
+
+		file_put_contents($path . '.log', $log);
+	}
+
+	///////////////////////////////////////////////////////////
+
 	public static function lastTypeCounter($type, $start, $count = false){
 		$data = [];
 		$data['start'] = $start;

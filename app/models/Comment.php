@@ -36,4 +36,77 @@ class Comment extends Model{
 
 		return $comment;
 	}
+
+	public static function setDuplicatesComments($start = 0){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
+
+		$comments = self::selectRaw('old_id, COUNT(`old_id`) AS count')->groupBy('old_id')->having('count', '>', 1)->offset($start)->limit(1000)->get();
+
+		if($start < 17500) $next = $start + 1000;
+
+		if(!empty($comments)){
+			foreach($comments as $comment){
+				$comment_query = self::where('old_id', $comment->old_id)->offset(1)->limit(500);
+				$delete_comment = $comment_query;
+				$comment_db = $comment_query->get();
+				unset($comment_query);
+				$comments_insert = [];
+
+				foreach($comment_db as $comment_box){
+					if(!empty($comment_box->new_id) && !empty($comment_box->task_new_id)){
+						$comments_insert[] = [
+							'new_id' => $comment_box->new_id,
+							'task_new_id' => $comment_box->task_new_id
+						];
+					}
+				}
+
+				if(!empty($comments_insert)){
+					Capsule::table('comments_remove')->insert($comments_insert);
+					unset($comments_insert);
+				}
+
+				$delete_comment->delete();
+			}
+		} else unset($next);
+
+		unset($comments);
+
+		if(empty($next)){
+			print("Удаление дубликатов завершено!\r\n");
+			return true;
+		}
+
+		self::setDuplicatesComments($next);
+	}
+
+	public static function removeDuplicatesComments($start = 0){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
+
+		$count = Capsule::table('comments_remove')->count();
+		$tasks = Capsule::table('comments_remove')->offset($start)->limit(50)->get();
+
+		if($start < $count) $next = $start + 50;
+
+		$box_batch_list = [];
+		foreach($comments as $comment){
+			$box_batch_list[] = [
+				'method' => 'task.commentitem.delete',
+				'params' => [$comment->task_new_id, $comment->new_id]
+			];
+		}
+
+		if(!empty($box_batch_list)){
+			Crm::bxBoxCallBatch($box_batch_list);
+			unset($box_batch_list);
+		}
+
+		if(empty($next)){
+			print("Удаление задач завершено\r\n");
+			return true;
+		}
+
+		sleep(1);
+		self::removeDuplicatesComments($next);
+	}
 }

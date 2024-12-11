@@ -83,11 +83,11 @@ class UserField extends Model {
 					$pos = strpos($cloud_userfield['USER_TYPE_OWNER'], 'app.');
 					$pos2 = strpos($cloud_userfield['USER_TYPE_OWNER'], 'local.');
 					if($pos === false && $pos2 === false){
-						//$box_userfield = self::setBoxUserField($type, $cloud_userfields['result'][$key]);
+						$box_userfield = self::setBoxUserField($type, $cloud_userfields['result'][$key]);
 						$set_fields[] = $cloud_userfields['result'][$key];
 					}
 				} else {
-					//$box_userfield = self::setBoxUserField($type, $cloud_userfields['result'][$key]);
+					$box_userfield = self::setBoxUserField($type, $cloud_userfields['result'][$key]);
 					$set_fields[] = $cloud_userfields['result'][$key];
 				}
 			}
@@ -119,7 +119,7 @@ class UserField extends Model {
 			$result[] = $userfield_data;
 
 			//Проверяем есть ли поле в БЛ
-			/*$has_userfield = Capsule::table('user_fields')->where('cloud_id', $userfield_data['cloud_id']);
+			$has_userfield = Capsule::table('user_fields')->where('cloud_id', $userfield_data['cloud_id']);
 
 			//Если такое поле есть
 			if($has_userfield->exists()){
@@ -129,11 +129,11 @@ class UserField extends Model {
 			//Если нет
 			if(!$has_userfield->exists()){
 				Capsule::table('user_fields')->insert($userfield_data);
-			}*/
+			}
 		}
 
 		//preprint('result');
-		print_r($set_fields);
+		//print_r($set_fields);
 	}
 
 	//Получить названия поля из облака при выводе в CRM

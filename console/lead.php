@@ -21,4 +21,10 @@ $db = new Database();
 use Esvlad\Bx24copytobox\Models\Lead;
 
 //Lead::setLeadsDB();
+//Lead::tranferListLeads();
+//Lead::setObservers();
+//Lead::setStatuses('cloud');
+//Lead::setStatuses('box');
+//Lead::updateLeadsBoxDB();
+//Lead::exportDate();
 print("Заполнение Базы данных лидов завершен!");

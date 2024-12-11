@@ -20,5 +20,6 @@ $db = new Database();
 
 use Esvlad\Bx24copytobox\Models\User;
 
-User::getCloudUsersToBox();
+//User::getCloudUsersToBox();
+//User::replacement();
 print("Экспорт всех пользователей завершен");

@@ -1,7 +1,4 @@
 <?php
-ini_set('max_execution_time', 0);
-set_time_limit(0);
-
 function preprint($data){
     echo '<pre>';
     print_r($data);

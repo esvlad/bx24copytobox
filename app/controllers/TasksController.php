@@ -7,28 +7,37 @@ use Esvlad\Bx24copytobox\Models\Task;
 use Esvlad\Bx24copytobox\Models\Comment;
 
 class TasksController{
-
-	public function synchronizationTask($box_id){
+	public function synchronization($box_task_id, $box_user_id){
 		$json = [];
-		$cloud_id = Task::where('new_id', $box_id)->value('old_id');
+		$cloud_id = Task::where('new_id', $box_task_id)->value('old_id');
 		if(empty($cloud_id)){
 			$json = [
 				'status' => 'error',
-				'error_message' => 'ID облачной задачи в Базе данный отстуствует.'
+				'error_message' => 'ID облачной задачи в Базе данных отстуствует.'
 			];
+
+			Crm::bxBoxCall('im.notify.system.add', [
+				'USER_ID' => $box_user_id,
+				'MESSAGE' => 'Синхронизация невозможна, так как данных об этой задачи нет базу данных. Если у вас есть вопросы, то обратитесь к администратору.'
+			]);
 		} else {
 			$task_rest = Crm::bxCloudCall('tasks.task.get', ['taskId' => $cloud_id]);
 
 			if(empty($task_rest['result']['task'])){
 				$json = [
 					'status' => 'error',
-					'error_message' => 'Такой задачи в облакебольше нет, вероятно её удалили.'
+					'error_message' => 'Такой задачи в облаке больше нет, вероятно её удалили.'
 				];
+
+				Crm::bxBoxCall('im.notify.system.add', [
+					'USER_ID' => $box_user_id,
+					'MESSAGE' => 'Синхронизация невозможна, так как такой задачи в облаке больше нет, вероятно её удалили. Если у вас есть вопросы, то обратитесь к администратору.'
+				]);
 			} else {
 				$task = Task::handlerFields($task_rest['result']['task']);
 
 				Crm::bxBoxCall('tasks.task.update', [
-					'taskId' => $box_id,
+					'taskId' => $box_task_id,
 					'fields' => $task
 				]);
 
@@ -48,7 +57,7 @@ class TasksController{
 							if(!empty($comment_fields['NEW']) && $comment_fields['NEW'] === true){
 								unset($comment_fields['NEW']);
 
-								$new_comment_id = Crm::bxBoxCall('task.commentitem.add', ['taskId' => $box_id, 'fields' => $comment_fields]);
+								$new_comment_id = Crm::bxBoxCall('task.commentitem.add', ['taskId' => $box_task_id, 'fields' => $comment_fields]);
 								if(empty($new_comment_id['error'])){
 									Comment::insert([
 										'old_id' => $comment_id,
@@ -60,7 +69,7 @@ class TasksController{
 							} else {
 								$batch_list_comments[] = [
 									'method' => 'task.commentitem.update',
-									'params' => ['taskId' => $box_id, 'itemId' => $comment_id, 'fields' => $comment_fields]
+									'params' => ['taskId' => $box_task_id, 'itemId' => $comment_id, 'fields' => $comment_fields]
 								];
 							}
 						}

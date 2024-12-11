@@ -80,13 +80,13 @@ class User extends Model {
 					'old_id' => $user_id
 				];
 
-				print_r($new_user);
+				//print_r($new_user);
 
-				//Capsule::table('users_transfer')->insert(['old_id' => $user['ID'], 'email' => $user['EMAIL']]);
+				Capsule::table('users_transfer')->insert(['old_id' => $user['ID'], 'email' => $user['EMAIL']]);
 			}
 		}
 
-		/*if(!empty($batch)){
+		if(!empty($batch)){
 			$result = Crm::bxBoxCallBatch($batch);
 
 			foreach($result['result']['result'] as $key => $value){
@@ -97,9 +97,9 @@ class User extends Model {
 			foreach($list_id as $user_id){
 				Capsule::table('users_transfer')->where('old_id', $user_id['old_id'])->update(['new_id' => $user_id['new_id']]);
 			}
-		}*/
+		}
 
-		//print_r($new_users);
+		print_r($new_users);
 
 		if(empty($next)){
 			print("Трансфер завершен!");
@@ -107,5 +107,29 @@ class User extends Model {
 		}
 
 		self::getCloudUsersToBox($next);
+	}
+
+	public static function replacement($start = 0){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
+
+		$count = Capsule::table('fg3re_users')->count();
+		$users = Capsule::table('fg3re_users')->offset($start)->limit(1000)->get();
+
+		if($start < $count) $next = $start + 1000;
+
+		foreach($users as $user){
+			$bitrix_id = Capsule::table('users_transfer')->where('old_id', $user->bitrix_id)->whereNotNull('new_id');
+			if($bitrix_id->exists()){
+				$user_id = $bitrix_id->value('new_id');
+				Capsule::table('fg3re_users')->where('id', $user->id)->update(['bitrix_id' => $user_id]);
+			}
+		}
+
+		if(empty($next)){
+			print('Изменение завершено');
+			return true;
+		}
+
+		self::replacement($next);
 	}
 }

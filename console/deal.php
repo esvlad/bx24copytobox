@@ -22,7 +22,14 @@ $db = new Database();
 use Esvlad\Bx24copytobox\Models\Deal;
 
 //Deal::setDealsDB();
+//Deal::tranferListDeals();
+//Deal::removeDuplicates();
 //Deal::transferElementsDeal();
 //Deal::updateCloudDealsToBox();
-Deal::getContactIdByDeal();
-print("Заполнение Базы данных контактов завершен!");
+//Deal::getContactIdByDeal();
+//Deal::setObservers();
+//Deal::exportDate();
+//Deal::replacement();
+//Deal::replacementDataBase();
+Deal::replacementDealIdInFields();
+print("Заполнение Базы данных сделок завершен!");
