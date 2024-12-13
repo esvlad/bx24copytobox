@@ -839,4 +839,100 @@ class Deal extends Model{
 
 		self::replacementDealIdInFields($next);
 	}
+
+	public static function setBoxDealBiz($start = 0){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - {$start}\r\n");
+
+		$count = self::count();
+		//$deals = self::offset($start)->limit(50)->get();
+
+		$having = self::selectRaw('old_id, COUNT(old_id) as count')->groupBy('old_id')->having('count', '>', 1)->limit(100)->get();
+
+		$deals = [];
+		foreach($having as $deal){
+			$deals[] = [
+				'old_id' => $deal->old_id,
+				'count' => $deal->count
+			];
+		}
+		print_r($deals);
+
+		/*if($start < $count) $next = $start + 50;
+
+		$deals = [];
+		$deals[] = (object)[
+			'old_id' => 62382,
+			'new_id' => 44335
+		];
+
+		if(!empty($deals)){
+			$box_batch_list = [];
+			foreach($deals as $deal){
+				$box = Crm::bxBoxCall('crm.deal.get', ['ID' => $deal->new_id]);
+				$cloud = Crm::bxCloudCall('crm.deal.get', ['ID' => $deal->old_id]);
+				$params = [];
+
+				print("Коробка\r\n");
+				print_r(['title' => $box['result']['TITLE'], 'category_id' => $box['result']['CATEGORY_ID'], 'stage' => $box['result']['STAGE_ID'], 'assigned_by_id' => $box['result']['ASSIGNED_BY_ID']]);
+				print("Облако\r\n");
+				print_r(['title' => $cloud['result']['TITLE'], 'category_id' => $cloud['result']['CATEGORY_ID'], 'stage' => $cloud['result']['STAGE_ID'], 'assigned_by_id' => $cloud['result']['ASSIGNED_BY_ID']]);
+
+				$title = $cloud['result']['TITLE'];
+				$category = Capsule::table('stages')->where('old_category_id', $cloud['result']['CATEGORY_ID'])->value('new_category_id');
+				$stage = Capsule::table('stages')->where('old_status_id', $cloud['result']['STAGE_ID'])->value('new_status_id');
+				$assegned_id = Crm::getBoxUserId($cloud['result']['ASSIGNED_BY_ID']);
+
+				if($box['result']['TITLE'] != $title){
+					$params['title'] = $title;
+				}
+
+				if($box['result']['CATEGORY_ID'] != $category){
+					$params['category_id'] = $category;
+				}
+
+				if($box['result']['STAGE_ID'] != $stage){
+					$params['stage'] = $stage;
+				}
+
+				if($box['result']['ASSIGNED_BY_ID'] != $assegned_id){
+					$params['assegned_id'] = 'user_' . $assegned_id;
+				}
+
+				$pp = [
+					'title' => $title,
+					'category_id' => $category,
+					'stage' => $stage,
+					'assigned_by_id' => $assegned_id,
+				];
+
+				print("Отформотированные данные из облака\r\n");
+				print_r($pp);
+
+				print("Данные для изменения\r\n");
+				print_r($params);
+
+				if(!empty($params)){
+					$box_batch_list[] = [
+						'method' => 'bizproc.workflow.start',
+						'params' => [
+							'TEMPLATE_ID' => 208,
+							'DOCUMENT_ID' => ['crm', 'CCrmDocumentDeal', 'DEAL_' . $deal->new_id],
+							'PARAMETERS'  => $params
+						]
+					];
+				}
+			}
+
+			if(!empty($box_batch_list)){
+				Crm::bxBoxCallBatch($box_batch_list);
+			}
+		}
+
+		if(empty($next)){
+			print("Изменение завершено\r\n");
+			return true;
+		}
+
+		self::setBoxDealBiz($next);*/
+	}
 }

@@ -31,5 +31,6 @@ use Esvlad\Bx24copytobox\Models\Deal;
 //Deal::exportDate();
 //Deal::replacement();
 //Deal::replacementDataBase();
-Deal::replacementDealIdInFields();
+//Deal::replacementDealIdInFields();
+Deal::setBoxDealBiz();
 print("Заполнение Базы данных сделок завершен!");

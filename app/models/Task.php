@@ -291,4 +291,46 @@ class Task extends Model{
 
 		self::getCloudTasksID($next);
 	}
+
+	public static function changeUsersIdInDBTasks($start = 0){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
+
+		$count = Capsule::table('tasks_data')->count();
+		$tasks = Capsule::table('tasks_data')->select(['id', 'created_by', 'responsible_id', 'changed_by', 'closed_by'])->offset($start)->limit(100)->get();
+
+		if($start < $count) $next = $start + 100;
+
+		if(!empty($tasks)){
+			foreach($tasks as $task){
+				$update = [];
+
+				if(!empty('created_by')){
+					$update['created_by'] = Crm::getBoxUserId($task->created_by);
+				}
+
+				if(!empty('responsible_id')){
+					$update['responsible_id'] = Crm::getBoxUserId($task->responsible_id);
+				}
+
+				if(!empty('changed_by')){
+					$update['changed_by'] = Crm::getBoxUserId($task->changed_by);
+				}
+
+				if(!empty('closed_by')){
+					$update['closed_by'] = Crm::getBoxUserId($task->closed_by);
+				}
+
+				if(!empty($update)){
+					Capsule::table('tasks_data')->where('id', $task->id)->update($update);
+				}
+			}
+		}
+
+		if(empty($next)){
+			print("Удаление задач завершено\r\n");
+			return true;
+		}
+
+		self::changeUsersIdInDBTasks($next);
+	}
 }

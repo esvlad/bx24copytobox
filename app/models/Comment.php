@@ -37,12 +37,10 @@ class Comment extends Model{
 		return $comment;
 	}
 
-	public static function setDuplicatesComments($start = 0){
+	public static function setDuplicatesComments(){
 		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
 
-		$comments = self::selectRaw('old_id, COUNT(`old_id`) AS count')->groupBy('old_id')->having('count', '>', 1)->offset($start)->limit(1000)->get();
-
-		if($start < 17500) $next = $start + 1000;
+		$comments = self::selectRaw('old_id, COUNT(`old_id`) AS count')->groupBy('old_id')->having('count', '>', 1)->get();
 
 		if(!empty($comments)){
 			foreach($comments as $comment){
@@ -77,7 +75,7 @@ class Comment extends Model{
 			return true;
 		}
 
-		self::setDuplicatesComments($next);
+		//self::setDuplicatesComments($next);
 	}
 
 	public static function removeDuplicatesComments($start = 0){
