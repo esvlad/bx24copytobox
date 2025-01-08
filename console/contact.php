@@ -26,5 +26,6 @@ use Esvlad\Bx24copytobox\Models\Task;
 //Contact::setAddress();
 //Contact::exportDate();
 //Contact::replacement();
-Task::getCloudTasksID();
+//Task::getCloudTasksID();
+//Task::hasBoxFolderClient();
 print("Заполнение Базы данных контактов завершен!");

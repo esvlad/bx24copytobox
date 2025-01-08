@@ -91,6 +91,195 @@ class Deal extends Model{
 		self::getContactIdByDeal($next);
 	}
 
+	public static function hasContactIdByDeal($start = 0){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
+
+		$params = [
+			'select' => ["ID", "CONTACT_ID", "UF_CRM_1720601636"],
+			'order' => ["DATE_CREATE" => "DESC"],
+			'start' => $start
+		];
+
+		$result = Crm::bxBoxCall('crm.deal.list', $params);
+
+		if(!empty($result['next'])) $next = $result['next'];
+
+		foreach($result['result'] as $deal){
+			$deal_id = $deal['ID'];
+			$hasDealCloud = self::where('new_id', $deal_id);
+
+			if(empty($deal['CONTACT_ID']) && !empty($deal['UF_CRM_1720601636'])){
+				print(date('d.m.Y H:i:s') . " Сделка - " . $deal_id . "\r\n");
+				$deal_cloud_result = Crm::bxCloudCall('crm.deal.get', ['ID' => $deal['UF_CRM_1720601636']]);
+				$deal_cloud = $deal_cloud_result['result'];
+
+				if(!empty($deal_cloud['CONTACT_ID'])){
+					$hasContact = Contact::where('old_id', $deal_cloud['CONTACT_ID'])->whereNotNull('new_id');
+					if(!$hasContact->exists()){
+						$box_contact_id = Contact::setContactBox($deal_cloud['CONTACT_ID']);
+					} else {
+						$box_contact_id = Contact::where('old_id', $deal_cloud['CONTACT_ID'])->value('new_id');
+					}
+
+					Crm::bxBoxCall('crm.deal.contact.add', ['ID' => $deal_id, 'fields' => ['CONTACT_ID' => $box_contact_id]]);
+				}
+			}
+
+			if(!empty($deal['CONTACT_ID']) && !empty($deal['UF_CRM_1720601636'])){
+				$contact = Crm::bxBoxCall('crm.contact.get', ['ID' => $deal['CONTACT_ID']]);
+
+				if(empty($contact['result'])){
+					print(date('d.m.Y H:i:s') . " Сделка - " . $deal_id . "\r\n");
+					$deal_cloud_result = Crm::bxCloudCall('crm.deal.get', ['ID' => $deal['UF_CRM_1720601636']]);
+					$deal_cloud = $deal_cloud_result['result'];
+
+					if(!empty($deal_cloud['CONTACT_ID'])){
+						$hasContact = Contact::where('old_id', $deal_cloud['CONTACT_ID'])->whereNotNull('new_id');
+						if(!$hasContact->exists()){
+							$box_contact_id = Contact::setContactBox($deal_cloud['CONTACT_ID']);
+						} else {
+							$box_contact_id = Contact::where('old_id', $deal_cloud['CONTACT_ID'])->value('new_id');
+						}
+
+						Crm::bxBoxCall('crm.deal.contact.add', ['ID' => $deal_id, 'fields' => ['CONTACT_ID' => $box_contact_id]]);
+					}
+				}
+			}
+		}
+
+		if(empty($next)){
+			print("Трансфер завершен!");
+			return true;
+		}
+
+		self::hasContactIdByDeal($next);
+	}
+
+	public static function hasBoxFolderClient($start = 0){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
+
+		$params = [
+			'select' => ["ID", "CONTACT_ID", "UF_CRM_1720601636", "UF_CRM_1722838734", "UF_CRM_1565691799"], //UF_CRM_1722838734 коробка //UF_CRM_1565691799 облако
+			'order' => ["DATE_CREATE" => "DESC"],
+			'start' => $start
+		];
+
+		$result = Crm::bxBoxCall('crm.deal.list', $params);
+
+		if(!empty($result['next'])) $next = $result['next'];
+
+		$editDeals = [];
+		foreach($result['result'] as $deal){
+			if(!empty($deal['UF_CRM_1722838734'])){
+				$pos = strpos($deal['UF_CRM_1722838734'], 'docs/path/Kliyenty');
+				if($pos !== false){
+					$folderUri = self::hasFolderDisk($deal['UF_CRM_1722838734']);
+
+					$editDeals[] = [
+						'ID' => $deal['ID'],
+						'UF_CRM_1722838734' => $folderUri
+					];
+				}
+			} elseif (empty($deal['UF_CRM_1722838734']) && !empty($deal['UF_CRM_1565691799'])) {
+				$folderUri = self::hasFolderDisk($deal['UF_CRM_1565691799']);
+
+				$editDeals[] = [
+					'ID' => $deal['ID'],
+					'UF_CRM_1722838734' => $folderUri
+				];
+			} elseif(empty($deal['UF_CRM_1722838734']) && empty($deal['UF_CRM_1565691799']) && !empty($deal['CONTACT_ID'])){
+				$contact = Crm::bxBoxCall('crm.contact.get', ['ID' => $deal['CONTACT_ID']]);
+
+				if(!empty($contact['resilt']) && !empty($contact['resilt']['UF_CRM_1722586545'])){
+					$folderUri = self::hasFolderDisk($contact['resilt']['UF_CRM_1722586545']);
+
+					$pos = strpos($contact['resilt']['UF_CRM_1722586545'], 'crm.ru/docs/path/Kliyenty');
+					if($pos !== false){
+						Crm::bxBoxCall('crm.contact.update', ['ID' => $deal['CONTACT_ID'], 'fields' => ['UF_CRM_1722586545' => $folderUri]]);
+					}
+
+					$editDeals[] = [
+						'ID' => $deal['ID'],
+						'UF_CRM_1722838734' => $folderUri
+					];
+				}
+
+				if(!empty($contact['resilt']) && empty($contact['resilt']['UF_CRM_1722586545']) && !empty($contact['resilt']['UF_CRM_1624004832'])){
+					$folderUri = self::hasFolderDisk($contact['resilt']['UF_CRM_1624004832']);
+
+					Crm::bxBoxCall('crm.contact.update', ['ID' => $deal['CONTACT_ID'], 'fields' => ['UF_CRM_1722586545' => $folderUri]]);
+
+					$editDeals[] = [
+						'ID' => $deal['ID'],
+						'UF_CRM_1722838734' => $folderUri
+					];
+				}
+
+				if(!empty($contact['resilt']) && empty($contact['resilt']['UF_CRM_1722586545']) && empty($contact['resilt']['UF_CRM_1624004832'])){
+					Crm::bxBoxCall('bizproc.workflow.start', [
+						'TEMPLATE_ID' => 246,
+						'DOCUMENT_ID' => ['crm', 'CCrmDocumentDeal', 'DEAL_' . $deal['ID']],
+						'PARAMETERS' => null
+					]);
+				}
+			}
+		}
+
+		if(!empty($editDeals)){
+			$box_batch_list = [];
+			foreach($editDeals as $update_deal){
+				$box_batch_list[] = [
+					'method' => 'crm.deal.update',
+					'params' => [
+						'ID' => $update_deal['ID'],
+						'fields' => [
+							'UF_CRM_1722838734' => $update_deal['UF_CRM_1722838734']
+						]
+					]
+				];
+			}
+
+			Crmd::bxBoxCallBatch($box_batch_list);
+		}
+
+		if(empty($next)){
+			print("Трансфер завершен!");
+			return true;
+		}
+
+		self::hasBoxFolderClient($next);
+	}
+
+	public static function hasFolderDisk($editFolderUri){
+		$editFolder = urldecode($editFolderUri);
+		$editFolderName = explode('/', $editFolder);
+		$editFolderName = end($editFolderName);
+
+		$hasCloudDisk = Crm::bxBoxCall('disk.folder.getchildren', [
+            'id' => 403,
+            'filter' => [
+                'NAME' => $editFolderName //Вытянуть имя папки
+            ]
+        ]);
+
+        if(!empty($hasCloudDisk['result'])){
+        	$folderUri = $hasCloudDisk['result']['DETAIL_URL'];
+        } else {
+        	$addFolderUri = Crm::bxBoxCall('disk.folder.addsubfolder', [
+	            'id' => 403,
+	            'data' => [
+	                'NAME' => $editFolderName //Вытянуть имя папки
+	            ]
+	        ]);
+
+        	if(!empty($addFolderUri['result'])){
+        		$folderUri = $addFolderUri['result']['DETAIL_URL'];
+        	}
+        }
+
+        return $folderUri;
+	}
+
 	public static function transferElementsDeal($start = 0){
 		//self::lastTypeCounter('deal_get_field_data', $start);
 		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
