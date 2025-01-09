@@ -155,7 +155,52 @@ class Deal extends Model{
 		self::hasContactIdByDeal($next);
 	}
 
-	public static function hasBoxFolderClient($start = 20400){
+	public static function hasContactIdsByDeal($start = 0){ //9800
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
+
+		$params = [
+			'select' => ["ID"],
+			'order' => ["CONTACT_IDS" => "DESC"],
+			'start' => $start
+		];
+
+		$result = Crm::bxBoxCall('crm.deal.list', $params);
+
+		if(!empty($result['next'])) $next = $result['next'];
+		foreach($result['result'] as $deal){
+			$deal_id = $deal['ID'];
+
+			$contacts = Crm::bxBoxCall('crm.deal.contact.items.get', ['ID' => $deal_id]);
+
+			if(!empty($contacts['result']) && count($contacts['result']) > 1){
+				$delete_contacts = false;
+				$contact_id = false;
+				foreach($contacts['result'] as $contact){
+					$hasContact = Crm::bxBoxCall('crm.contact.get', ['ID' => $contact['CONTACT_ID']]);
+
+					if(!empty($hasContact['result'])){
+						$contact_id = $contact['CONTACT_ID'];
+					} else {
+						$delete_contacts = true;
+					}
+				}
+
+				if($delete_contacts === true){
+					Crm::bxBoxCall('crm.deal.contact.items.delete', ['ID' => $deal_id]);
+					Crm::bxBoxCall('crm.deal.contact.add', ['ID' => $deal_id, 'fields' => ['CONTACT_ID' => $contact_id]]);
+				}
+			}
+		}
+
+		if(empty($next)){
+			print("Трансфер завершен!");
+			return true;
+		}
+
+		self::hasContactIdsByDeal($next);
+	}
+
+	public static function hasBoxFolderClient($start = 25000){
 		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
 
 		$params = [
@@ -285,6 +330,73 @@ class Deal extends Model{
         }
 
         return $folderUri;
+	}
+
+	public static function hasDealsAuthenticityСheck($start = 0){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
+
+		$params = [
+			'select' => ["ID", "TITLE", "CATEGORY_ID", "STAGE_ID", "ASSIGNED_BY_ID", "UF_CRM_1720601636"],
+			'order' => ["DATE_CREATE" => "DESC"],
+			'start' => $start
+		];
+
+		$result = Crm::bxBoxCall('crm.deal.list', $params);
+
+		if(!empty($result['next'])) $next = $result['next'];
+
+		if(!empty($box_deal['UF_CRM_1720601636'])){
+			$data = [];
+			foreach($result['result'] as $deal_box){
+				$update = [];
+				$result_cloud = Crm::bxCloudCall('crm.deal.get', ['ID' => $deal_box['UF_CRM_1720601636']]);
+				$deal_cloud = self::handlerFields($result_cloud['result']);
+
+				if($deal_cloud['ASSIGNED_BY_ID'] != 1 && $deal_cloud['ASSIGNED_BY_ID'] != $deal_box['ASSIGNED_BY_ID']){
+					$update['assegned_id'] = $deal_cloud['ASSIGNED_BY_ID'];
+				}
+
+				if($deal_box['TITLE'] != $deal_cloud['TITLE']){
+					$update['title'] = $deal_cloud['TITLE'];
+				}
+
+				if($deal_box['CATEGORY_ID'] != $deal_cloud['CATEGORY_ID']){
+					$update['category_id'] = $deal_cloud['CATEGORY_ID'];
+					$update['stage'] = $deal_cloud['STAGE_ID'];
+				}
+
+				if(!empty($update)) $update['deal_id'] = $deal_box['ID'];
+
+				$data[] = $update;
+			}
+			unset($result);
+
+			if(!empty($data)){
+				$box_batch_list = [];
+				foreach($data as $value){
+					$deal_id = $value['deal_id'];
+					unset($value['deal_id']);
+
+					$box_batch_list[] = [
+						'method' => 'bizproc.workflow.start',
+						'params' => [
+							'TEMPLATE_ID' => 208,
+							'DOCUMENT_ID' => ['crm', 'CCrmDocumentDeal', 'DEAL_' . $deal_id],
+							'PARAMETERS' => $value
+						]
+					];
+				}
+
+				Crm::bxBoxCallBatch($box_batch_list);
+			}
+		}
+
+		if(empty($next)){
+			print("Трансфер завершен!");
+			return true;
+		}
+
+		self::hasDealsAuthenticityСheck($next);
 	}
 
 	public static function transferElementsDeal($start = 0){

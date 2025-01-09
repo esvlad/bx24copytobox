@@ -292,6 +292,45 @@ class Task extends Model{
 		self::getCloudTasksID($next);
 	}
 
+	public static function getTaskCloudToBox($start = 0){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - 1000" . $start . "\r\n");
+		Capsule::table('counters')->where('type', 'task')->update(['start' => $start]);
+
+		$params = [
+			'select' => ['*'],
+			'filter' => [">CREATED_DATE" => "2024-01-01"],
+			'order' => ['CREATED_DATE' => 'DESC'],
+			'start' => $start
+		];
+
+		$result = Crm::bxCloudCall('tasks.task.list', $params);
+
+		if(!empty($result['next'])) $next = $result['next'];
+
+		if(!empty($result['result']['tasks'])){
+			$tasks = [];
+			foreach($result['result']['tasks'] as $task){
+				$hasTaskDB = self::where('old_id', $task['id'])->value('new_id');
+
+				if(!empty($hasTaskDB)){
+					//Задача существует
+				} else {
+					//Задачи нет
+				}
+			}
+		}
+
+		print_r($result['result']['tasks']);
+		return true;
+
+		/*if(empty($next)){
+			print("Заполнения базы задач завершено\r\n");
+			return true;
+		}
+
+		self::getTaskCloudToBox($next);*/
+	}
+
 	public static function changeUsersIdInDBTasks($start = 0){
 		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
 

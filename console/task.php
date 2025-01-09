@@ -39,7 +39,8 @@ use Esvlad\Bx24copytobox\Models\Comment;
 //Task::export(13348, 'ACCOMPLICE');
 //Task::setDuplicatesTask();
 //Task::removeDuplicatesTask();
-Task::changeUsersIdInDBTasks();
+//Task::changeUsersIdInDBTasks();
+Task::getTaskCloudToBox();
 
 //Comment::setDuplicatesComments();
 //Comment::removeDuplicatesComments();

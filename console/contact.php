@@ -20,6 +20,7 @@ $db = new Database();
 
 use Esvlad\Bx24copytobox\Models\Contact;
 use Esvlad\Bx24copytobox\Models\Task;
+use Esvlad\Bx24copytobox\Models\Deal;
 
 //Contact::setContactsDB();
 //Contact::updateCloudContactsToBox();
@@ -28,4 +29,5 @@ use Esvlad\Bx24copytobox\Models\Task;
 //Contact::replacement();
 //Task::getCloudTasksID();
 //Task::hasBoxFolderClient();
+Deal::hasDealsAuthenticityСheck();
 print("Заполнение Базы данных контактов завершен!");
