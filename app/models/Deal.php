@@ -155,7 +155,7 @@ class Deal extends Model{
 		self::hasContactIdByDeal($next);
 	}
 
-	public static function hasBoxFolderClient($start = 0){
+	public static function hasBoxFolderClient($start = 20400){
 		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
 
 		$params = [
@@ -225,6 +225,8 @@ class Deal extends Model{
 			}
 		}
 
+		unset($result);
+
 		if(!empty($editDeals)){
 			$box_batch_list = [];
 			foreach($editDeals as $update_deal){
@@ -239,7 +241,10 @@ class Deal extends Model{
 				];
 			}
 
-			Crmd::bxBoxCallBatch($box_batch_list);
+			Crm::bxBoxCallBatch($box_batch_list);
+
+			unset($editDeals);
+			unset($box_batch_list);
 		}
 
 		if(empty($next)){
@@ -262,8 +267,10 @@ class Deal extends Model{
             ]
         ]);
 
-        if(!empty($hasCloudDisk['result'])){
-        	$folderUri = $hasCloudDisk['result']['DETAIL_URL'];
+        //print_r($hasCloudDisk);
+
+        if(!empty($hasCloudDisk['result']) && $hasCloudDisk['total'] == 1){
+        	$folderUri = $hasCloudDisk['result'][0]['DETAIL_URL'];
         } else {
         	$addFolderUri = Crm::bxBoxCall('disk.folder.addsubfolder', [
 	            'id' => 403,
