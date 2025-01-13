@@ -6,11 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 use Esvlad\Bx24copytobox\Models\User;
+use Esvlad\Bx24copytobox\Models\Comment;
 use Esvlad\Bx24copytobox\Models\Crm;
-
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Reader\IReadFilter;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Task extends Model{
 	protected $table = "tasks";
@@ -34,7 +31,6 @@ class Task extends Model{
 					break;
 				case 'accomplicesData':
 				case 'auditorsData':
-				case 'commentsCount':
 				case 'creator':
 				case 'forumId':
 				case 'forumTopicId':
@@ -47,7 +43,9 @@ class Task extends Model{
 				case 'xmlId':
 					unset($task[$key]);
 					break;
-				default : break;
+				default :
+					$task[$key] = $value;
+					break;
 			}
 		}
 
@@ -298,8 +296,8 @@ class Task extends Model{
 
 		$params = [
 			'select' => ['*'],
-			'filter' => [">CREATED_DATE" => "2024-01-01"],
-			'order' => ['CREATED_DATE' => 'DESC'],
+			'filter' => ["ID" => "267334"],
+			'order' => ['ID' => 'DESC'],
 			'start' => $start
 		];
 
@@ -308,19 +306,46 @@ class Task extends Model{
 		if(!empty($result['next'])) $next = $result['next'];
 
 		if(!empty($result['result']['tasks'])){
+			//print_r($result['result']['tasks']);
+
 			$tasks = [];
 			foreach($result['result']['tasks'] as $task){
-				$hasTaskDB = self::where('old_id', $task['id'])->value('new_id');
+				$hasTaskDB = self::where('old_id', $task['id']);
 
-				if(!empty($hasTaskDB)){
-					//Задача существует
+				$task_cloud = self::handlerFields($task);
+				print_r($task_cloud);
+
+				if($hasTaskDB->exists()){
+					$task_box_id = $hasTaskDB->value('new_id');
+
+					$task_box = self::getTaskBox($task_box_id);
+					print_r($task_box);
+
+					if($task_box['commentsCount'] != $task_cloud['commentsCount']){
+						$task_comments_cloud = Comment::getTaskComments($task['id']);
+						$task_comments_box = Comment::getTaskComments($task_box_id, true);
+						print_r($task_comments_cloud);
+						print_r($task_comments_box);
+
+						if(!empty($task_comments_box)){
+							foreach($task_comments_box as $task_comment_box){
+								Crm::bxBoxCall('task.commentitem.delete', [$task_box_id, $task_comment_box['ID']]);
+								$hasComment = Comment::where('new_id', $task_comment_box['ID']);
+								if($hasComment->exists()) $hasComment->delete();
+							}
+						}
+
+						if(!empty($task_comments_cloud)){
+							Comment::setTaskCommentsBox($task_comments_cloud);
+						}
+					}
+
 				} else {
-					//Задачи нет
+					//$task_box_id = self::setTaskToBox($task_cloud);
 				}
 			}
 		}
 
-		print_r($result['result']['tasks']);
 		return true;
 
 		/*if(empty($next)){
@@ -329,6 +354,16 @@ class Task extends Model{
 		}
 
 		self::getTaskCloudToBox($next);*/
+	}
+
+	public static function getTaskBox($task_id){
+		$result = Crm::bxBoxCall('tasks.task.get', ['taskId' => $task_id, 'select' => ["*"]]);
+
+		if(!empty($result['result']['task'])){
+			return $result['result']['task'];
+		}
+
+		return false;
 	}
 
 	public static function changeUsersIdInDBTasks($start = 0){

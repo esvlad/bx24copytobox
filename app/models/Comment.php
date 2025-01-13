@@ -15,8 +15,7 @@ class Comment extends Model{
 		$comment = [];
 
 		if(!self::where('new_id', $fields['ID'])->exists()){
-			$comment['ID'] = $fields['ID'];
-			$comment['NEW'] = true;
+			$comment['ID'] = false;
 		} else {
 			$comment['ID'] = self::where('old_id', $fields['ID'])->value('new_id');
 		}
@@ -29,9 +28,9 @@ class Comment extends Model{
 		$comment['POST_DATE'] = $fields['POST_DATE'];
 
 		if(!empty($author_name)){
-			$comment['POST_MESSAGE'] = '[B]' . $author_name . ':[/B] ' . $fields['POST_MESSAGE'];
+			$comment['POST_MESSAGE'] = '[B]' . $author_name . ':[/B] ' . self::remove_bbcode($fields['POST_MESSAGE']);
 		} else {
-			$comment['POST_MESSAGE'] = $fields['POST_MESSAGE'];
+			$comment['POST_MESSAGE'] = self::remove_bbcode($fields['POST_MESSAGE']);
 		}
 
 		return $comment;
@@ -106,5 +105,42 @@ class Comment extends Model{
 
 		sleep(1);
 		self::removeDuplicatesComments($next);
+	}
+
+	public static function setTaskCommentsBox($task_id, $comments = []){
+		foreach($comments as $value){
+			$comment = self::handlerFields($value);
+
+			if($comment['ID'] === false){
+				unset($comment['ID']);
+				Crm::bxBoxCall('task.commentitem.add', [$task_id, $comment]);
+			} else {
+				$comment_id = $comment['ID'];
+				unset($comment['ID']);
+				Crm::bxBoxCall('task.commentitem.update', [$task_id, $comment_id, $comment]);
+			}
+		}
+	}
+
+	public static function getTaskComments($task_id, $box = false){
+		$params = [$task_id, ['ID' => 'asc'], []];
+
+		if($box === true){
+			$result = Crm::bxBoxCall('task.commentitem.getlist', $params);
+		} else {
+			$result = Crm::bxCloudCall('task.commentitem.getlist', $params);
+		}
+
+		if(!empty($result['result'])) {
+			return $result['result'];
+		}
+
+		return false;
+	}
+
+	private static function remove_bbcode($string) {
+	    $pattern = '~\[[^]]+]~';
+	    $replace = '';
+	    return preg_replace($pattern, $replace, $string);
 	}
 }
