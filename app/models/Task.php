@@ -11,13 +11,14 @@ use Esvlad\Bx24copytobox\Models\Crm;
 
 class Task extends Model{
 	protected $table = "tasks";
+	private $task_folder_id = 945077;
 
 	public static function getTaskCloudToBox($start = 0){
 		print(date('d.m.Y H:i:s') . " Выполнено шагов - 1000" . $start . "\r\n");
 		Capsule::table('counters')->where('type', 'task')->update(['start' => $start]);
 
 		$params = [
-			'select' => ['*'],
+			'select' => ['*', 'UF_*'],
 			'filter' => ["ID" => "267334"],
 			'order' => ['ID' => 'DESC'],
 			'start' => $start
@@ -48,16 +49,18 @@ class Task extends Model{
 					print_r($task_box);
 
 					//Проверить наличие чек-листа и добавить к задаче
-					#################################################
 					if(!empty($task_cloud['checklist'])){
-						self::setChekLists($task_box_id, $task['id'], $task_cloud['checklist']);
+						self::setChekLists($task_box_id, $task_cloud['checklist']);
+					}
+
+					//Проверить наличие файлов и добавить к задаче
+					if(!empty($task_cloud['ufTaskWebdavFiles'])){
+						self::setTaskFiles($task_box_id, $task_cloud['ufTaskWebdavFiles']);
 					}
 
 					if($task_box['commentsCount'] != $task_cloud['commentsCount']){
 						$task_comments_cloud = Comment::getTaskComments($task['id']);
 						$task_comments_box = Comment::getTaskComments($task_box_id, true);
-						print_r($task_comments_cloud);
-						print_r($task_comments_box);
 
 						if(!empty($task_comments_box)){
 							foreach($task_comments_box as $task_comment_box){
@@ -70,7 +73,12 @@ class Task extends Model{
 						if(!empty($task_comments_cloud)){
 							Comment::setTaskCommentsBox($task_comments_cloud);
 						}
+
+						unset($task_comments_cloud);
+						unset($task_comments_box);
 					}
+
+					unset($task_box);					
 				} else {
 					$task_data = [];
 
@@ -91,6 +99,11 @@ class Task extends Model{
 					if(!empty($task_cloud['checklist'])){
 						$task_cloud_checklist = $task_cloud['checklist'];
 						unset($task_cloud['checklist']);
+					}
+
+					if(!empty($task_cloud['ufTaskWebdavFiles'])){
+						$task_cloud_files = $task_cloud['ufTaskWebdavFiles'];
+						unset($task_cloud['ufTaskWebdavFiles']);
 					}
 
 					if(!empty($task_cloud['accomplices'])){
@@ -128,21 +141,31 @@ class Task extends Model{
 					$task_box_id = self::setTaskBox($task_cloud);
 					$task_data['new_id'] = $task_box_id;
 					self::insert($task_data);
+					unset($task_data);
 
 					//Проверить наличие чек-листа и добавить к задаче
-					#################################################
 					if(!empty($task_cloud_checklist)){
-						self::setChekLists($task_box_id, $task['id'], $task_cloud_checklist);
+						self::setChekLists($task_box_id, $task_cloud_checklist);
+					}
+
+					//Проверить наличие файлов и добавить к задаче
+					if(!empty($task_cloud_files)){
+						self::setTaskFiles($task_box_id, $task_cloud['title'], $task_cloud_files, true);
 					}
 					
 					//Проверить наличие комментариев и добавить к задаче
 					$task_comments_cloud = Comment::getTaskComments($task_box_id);
 					if(!empty($task_comments_cloud)){
 						Comment::setTaskCommentsBox($task_box_id, $task_comments_cloud);
+						unset($task_comments_cloud);
 					}
 				}
+
+				unset($task_cloud);
 			}
 		}
+
+		unset($result);
 
 		return true;
 
@@ -170,8 +193,108 @@ class Task extends Model{
 		return $result['result']['task']['id'];
 	}
 
-	public static function setChekLists($task_box_id, $task_cloud_id, $checklist){
-		//$task_cheklists = Crm::bxCloudCall('task.checklistitem.getlist', [$task['id'], 'order' => ['SORT_INDEX' => 'asc']]);
+	public static function setChekLists($task_box_id, $checklists){
+		$task_box = Crm::bxBoxCall('task.checklistitem.getlist', [$task_box_id]);
+
+		if(!empty($task_box['result'])){
+			if(count($task_box['result']) == count($checklists)){
+				return true;
+			} else {
+				$box_batch_list = [];
+				foreach($task_box['result'] as $checklist_box){
+					$box_batch_list[] = [
+						'method' => 'task.checklistitem.delete',
+						'params' => [$task_box_id, $checklist_box['ID']]
+					];
+				}
+				Crm::bxBoxCallBatch($box_batch_list);
+				unset($box_batch_list);
+			}			
+		}
+
+		unset($task_box);
+
+		$box_batch_list = [];
+		foreach($checklists as $checklist){
+			$box_batch_list[] = [
+				'method' => 'task.checklistitem.add',
+				'params' => [
+					$task_box_id,
+					[
+						'TITLE' => $checklist['TITLE'],
+						'CREATED_BY' => Crm::getBoxUserId($checklist['CREATED_BY']),
+						'IS_COMPLETE' => $checklist['IS_COMPLETE'],
+						'IS_IMPORTANT' => $checklist['IS_IMPORTANT'], 
+						'SORT_INDEX' => $checklist['SORT_INDEX'],
+						'TOGGLED_BY' => $checklist['TOGGLED_BY'],
+						'PARENT_ID' => '$result[0]'
+					]
+				]
+			];
+		}
+
+		Crm::bxBoxCallBatch($box_batch_list);
+				unset($box_batch_list);
+	}
+
+	public static function setTaskFiles($task_box_id, $task_title, $task_files, $new = false){
+		//Добавить папку
+		$folder_id = Disk::setFolderBox($this->task_folder_id, $task_title);
+
+		if($new === false){
+			$task_box = Crm::bxBoxCall('tasks.task.get', [
+				'taskId' => $task_box_id,
+				'select' => ['ID', 'UF_*']
+			]);
+
+			if(!empty($task_box['ufTaskWebdavFiles'])){
+				$task_files_box = [];
+				foreach($task_box['ufTaskWebdavFiles'] as $key => $file_box_id){
+					$file_box_info = Disk::getFile($file_box_id, 'box');
+					$task_files_box[] = $file_box_info['NAME'];
+				}
+			}
+
+			unset($task_box);
+		}
+
+		$files_box = [];
+		foreach($task_files as $key => $file_cloud_id){
+			$file_cloud_info = Disk::getFile($file_cloud_id, 'cloud');
+
+			//Проверить существует ли файл (чтобы не загружать повторно)
+			if(!empty($task_files_box)){
+				$has_file_box = in_array($file_cloud_info['NAME'], $task_files_box);
+			}
+
+			//Добавляем файл
+			if(empty($has_file_box)){
+				$file_box = Disk::setFileBox($folder_id, $file_cloud_info['NAME'], $file_cloud_info['DOWNLOAD_URL']);
+				$files_box[] = $file_box['ID'];
+			}
+
+			unset($file_cloud_info);
+			unset($task_files_box);
+		}
+		
+		//Добавить файлы к задаче
+		/*if(!empty($files_box)){
+			$box_batch_list = [];
+			foreach($files_box as $key => $file_id){
+				$box_batch_list[] = [
+					'method' => 'tasks.task.files.attach',
+					'params' => [
+						'taskId' => $task_box_id,
+						'fileId' => $file_id
+					]
+				];
+			}
+
+			Crm::bxBoxCallBatch($box_batch_list);
+			
+			unset($files_box);
+			unset($box_batch_list);
+		}*/
 	}
 
 	public static function handlerFields($task = []){
