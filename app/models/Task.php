@@ -19,7 +19,7 @@ class Task extends Model{
 
 		$params = [
 			'select' => ['*', 'UF_*'],
-			'filter' => ["ID" => "267334"],
+			'filter' => ["ID" => "278847"],
 			'order' => ['ID' => 'DESC'],
 			'start' => $start
 		];
@@ -40,13 +40,12 @@ class Task extends Model{
 				}
 
 				$task_cloud = self::handlerFields($task);
-				print_r($task_cloud);
 
-				if($hasTaskDB->exists()){
+
+				/*if($hasTaskDB->exists()){
 					$task_box_id = $hasTaskDB->value('new_id');
 
 					$task_box = self::getTaskBox($task_box_id);
-					print_r($task_box);
 
 					//Проверить наличие чек-листа и добавить к задаче
 					if(!empty($task_cloud['checklist'])){
@@ -58,15 +57,21 @@ class Task extends Model{
 						self::setTaskFiles($task_box_id, $task_cloud['ufTaskWebdavFiles']);
 					}
 
+					$task_data = self::handlerData($task_cloud);
+					Capsule::table('tasks_data')->insert($task_data);
+
+
 					if($task_box['commentsCount'] != $task_cloud['commentsCount']){
 						$task_comments_cloud = Comment::getTaskComments($task['id']);
 						$task_comments_box = Comment::getTaskComments($task_box_id, true);
 
 						if(!empty($task_comments_box)){
 							foreach($task_comments_box as $task_comment_box){
-								Crm::bxBoxCall('task.commentitem.delete', [$task_box_id, $task_comment_box['ID']]);
-								$hasComment = Comment::where('new_id', $task_comment_box['ID']);
-								if($hasComment->exists()) $hasComment->delete();
+								if(date('Y-m-d', strtotime($task_comment_box['POST_DATE'])) < '2025-01-10'){
+									Crm::bxBoxCall('task.commentitem.delete', [$task_box_id, $task_comment_box['ID']]);
+									$hasComment = Comment::where('new_id', $task_comment_box['ID']);
+									if($hasComment->exists()) $hasComment->delete();
+								}
 							}
 						}
 
@@ -78,23 +83,25 @@ class Task extends Model{
 						unset($task_comments_box);
 					}
 
-					unset($task_box);					
-				} else {
-					$task_data = [];
+					unset($task_box);
+				} else */
 
-					$task_data['old_id'] = $task_cloud['id'];
+				if(!$hasTaskDB->exists()){
+					$task_data = self::handlerData($task_cloud);
+					$new_task_cloud = [];
+					foreach($task_data as $key => $value){
+						$new_task_cloud[strtoupper($key)] = $value;
+					}
+
 					unset($task_cloud['id']);
 
-					$task_data['created_date'] = date('Y-m-d H:i:s', strtotime($task_cloud['createdDate']));
-					$task_data['changed_date'] = date('Y-m-d H:i:s', strtotime($task_cloud['changedDate']));
-					$task_data['status'] = $task_cloud['status'];
-
-					$task_data['created_by'] = $task_cloud['createdBy'];
 					$task_cloud['createdBy'] = 1;
-					$task_data['responsible_id'] = $task_cloud['responsibleId'];
 					$task_cloud['responsibleId'] = 1;
-					$task_data['changed_by'] = $task_cloud['changedBy'];
 					$task_cloud['changedBy'] = 1;
+
+					$new_task_cloud['CREATED_BY'] = 1;
+					$new_task_cloud['RESPONSIBLE_ID'] = 1;
+					$new_task_cloud['CHANGED_BY'] = 1;
 
 					if(!empty($task_cloud['checklist'])){
 						$task_cloud_checklist = $task_cloud['checklist'];
@@ -107,17 +114,14 @@ class Task extends Model{
 					}
 
 					if(!empty($task_cloud['accomplices'])){
-						$task_data['accomplices'] = $task_cloud['accomplices'];
 						unset($task_cloud['accomplices']);
 					}
 
 					if(!empty($task_cloud['auditors'])){
-						$task_data['auditors'] = $task_cloud['auditors'];
 						unset($task_cloud['auditors']);
 					}
 
 					if(!empty($task_cloud['closedBy'])){
-						$task_data['closed_by'] = $task_cloud['closedBy'];
 						$task_cloud['closedBy'] = 1;
 					}
 
@@ -126,22 +130,17 @@ class Task extends Model{
 						$task_data['new_parent_id'] = $task_cloud['parentId'];
 					}
 
-					if(!empty($task_cloud['priority'])) $task_data['priority'] = $task_cloud['priority'];
-					if(!empty($task_cloud['statusChangedDate'])) $task_data['status_changed_date'] = date('Y-m-d H:i:s', strtotime($task_cloud['statusChangedDate']));
-					if(!empty($task_cloud['closedDate'])) $task_data['closed_date'] = date('Y-m-d H:i:s', strtotime($task_cloud['closedDate']));
-					if(!empty($task_cloud['dateStart'])) $task_data['date_start'] = date('Y-m-d H:i:s', strtotime($task_cloud['dateStart']));
-					if(!empty($task_cloud['deadline'])) $task_data['deadline'] = date('Y-m-d H:i:s', strtotime($task_cloud['deadline']));
-					if(!empty($task_cloud['commentsCount'])) $task_data['comments_count'] = $task_cloud['commentsCount'];
-					if(!empty($task_cloud['taskControl'])) $task_data['task_control'] = $task_cloud['taskControl'];
-					if(!empty($task_cloud['subordinate'])) $task_data['subordinate'] = $task_cloud['subordinate'];
-					if(!empty($task_cloud['favorite'])) $task_data['favorite'] = $task_cloud['favorite'];
-					if(!empty($task_cloud['viewedDate'])) $task_data['viewed_date'] = date('Y-m-d H:i:s', strtotime($task_cloud['viewedDate']));
+					$box_id = Capsule::table('tasks_data')->where('old_id', $task_data['old_id']);
+					if($box_id->exists()){
+						$task_box_id = $box_id->value('new_id');
+					} else {
+						$task_box_id = self::setTaskBox($new_task_cloud);
+						$task_data['new_id'] = $task_box_id;
+						Capsule::table('tasks_data')->insert($task_data);
+					}
 
-
-					$task_box_id = self::setTaskBox($task_cloud);
-					$task_data['new_id'] = $task_box_id;
-					self::insert($task_data);
 					unset($task_data);
+					unset($new_task_cloud);
 
 					//Проверить наличие чек-листа и добавить к задаче
 					if(!empty($task_cloud_checklist)){
@@ -152,7 +151,7 @@ class Task extends Model{
 					if(!empty($task_cloud_files)){
 						self::setTaskFiles($task_box_id, $task_cloud['title'], $task_cloud_files, true);
 					}
-					
+
 					//Проверить наличие комментариев и добавить к задаче
 					$task_comments_cloud = Comment::getTaskComments($task_box_id);
 					if(!empty($task_comments_cloud)){
@@ -167,14 +166,14 @@ class Task extends Model{
 
 		unset($result);
 
-		return true;
+		//return true;
 
-		/*if(empty($next)){
+		if(empty($next)){
 			print("Заполнения базы задач завершено\r\n");
 			return true;
 		}
 
-		self::getTaskCloudToBox($next);*/
+		self::getTaskCloudToBox($next);
 	}
 
 	public static function getTaskBox($task_id){
@@ -188,6 +187,7 @@ class Task extends Model{
 	}
 
 	public static function setTaskBox($task){
+		print_r($task);
 		$result = Crm::bxBoxCall('tasks.task.add', ['fields' => $task]);
 
 		return $result['result']['task']['id'];
@@ -209,7 +209,7 @@ class Task extends Model{
 				}
 				Crm::bxBoxCallBatch($box_batch_list);
 				unset($box_batch_list);
-			}			
+			}
 		}
 
 		unset($task_box);
@@ -224,7 +224,7 @@ class Task extends Model{
 						'TITLE' => $checklist['TITLE'],
 						'CREATED_BY' => Crm::getBoxUserId($checklist['CREATED_BY']),
 						'IS_COMPLETE' => $checklist['IS_COMPLETE'],
-						'IS_IMPORTANT' => $checklist['IS_IMPORTANT'], 
+						'IS_IMPORTANT' => $checklist['IS_IMPORTANT'],
 						'SORT_INDEX' => $checklist['SORT_INDEX'],
 						'TOGGLED_BY' => $checklist['TOGGLED_BY'],
 						'PARENT_ID' => '$result[0]'
@@ -234,12 +234,12 @@ class Task extends Model{
 		}
 
 		Crm::bxBoxCallBatch($box_batch_list);
-				unset($box_batch_list);
+		unset($box_batch_list);
 	}
 
 	public static function setTaskFiles($task_box_id, $task_title, $task_files, $new = false){
 		//Добавить папку
-		$folder_id = Disk::setFolderBox($this->task_folder_id, $task_title);
+		$folder_id = Disk::setFolderBox(945077, $task_title);
 
 		if($new === false){
 			$task_box = Crm::bxBoxCall('tasks.task.get', [
@@ -276,9 +276,9 @@ class Task extends Model{
 			unset($file_cloud_info);
 			unset($task_files_box);
 		}
-		
+
 		//Добавить файлы к задаче
-		/*if(!empty($files_box)){
+		if(!empty($files_box)){
 			$box_batch_list = [];
 			foreach($files_box as $key => $file_id){
 				$box_batch_list[] = [
@@ -291,10 +291,10 @@ class Task extends Model{
 			}
 
 			Crm::bxBoxCallBatch($box_batch_list);
-			
+
 			unset($files_box);
 			unset($box_batch_list);
-		}*/
+		}
 	}
 
 	public static function handlerFields($task = []){
@@ -328,40 +328,37 @@ class Task extends Model{
 				case 'xmlId':
 					unset($task[$key]);
 					break;
-				case 'ufCrmTask': 
+				case 'ufCrmTask':
 					if(!empty($task[$key])){
-						$crm_data = [];
 						foreach($value as $crm){
 							$crm_explode = explode('_', $crm);
 							switch($crm_explode[0]){
 								case 'L':
 									$lead_box_id = Lead::where('old_id', $crm_explode[1]);
 									if($lead_box_id->exists()){
-										$crm_data[] = 'L_' . $lead_box_id->value('new_id');
-									} else {
-										//Добавить лид
+										$crm_data = 'L_' . $lead_box_id->value('new_id');
 									}
 									break;
 								case 'D':
 									$deal_box_id = Deal::where('old_id', $crm_explode[1]);
 									if($deal_box_id->exists()){
-										$crm_data[] = 'D_' . $deal_box_id->value('new_id');
-									} else {
-										//Добавить сделку
+										$crm_data = 'D_' . $deal_box_id->value('new_id');
 									}
 									break;
 								case 'C':
 									$contact_box_id = Contact::where('old_id', $crm_explode[1]);
 									if($contact_box_id->exists()){
-										$crm_data[] = 'C_' . $contact_box_id->value('new_id');
-									} else {
-										//Добавить контакт
+										$crm_data = 'C_' . $contact_box_id->value('new_id');
 									}
 									break;
 							}
 						}
 
-						$task[$key] = $crm_data;
+						if(!empty($crm_data)){
+							$task[$key] = $crm_data;
+						} else {
+							unset($task[$key]);
+						}
 					}
 				default :
 					$task[$key] = $value;
@@ -370,6 +367,39 @@ class Task extends Model{
 		}
 
 		return $task;
+	}
+
+	private static function handlerData($task_cloud){
+		$task_data = [];
+
+		$task_data['old_id'] = $task_cloud['id'];
+		$task_data['created_date'] = date('Y-m-d H:i:s', strtotime($task_cloud['createdDate']));
+		$task_data['changed_date'] = date('Y-m-d H:i:s', strtotime($task_cloud['changedDate']));
+		$task_data['status'] = $task_cloud['status'];
+
+		$task_data['title'] = $task_cloud['title'];
+		$task_data['description'] = $task_cloud['description'];
+
+		$task_data['created_by'] = $task_cloud['createdBy'];
+		$task_data['responsible_id'] = $task_cloud['responsibleId'];
+		$task_data['changed_by'] = $task_cloud['changedBy'];
+
+		if(!empty($task_cloud['accomplices'])) $task_data['accomplices'] = json_encode($task_cloud['accomplices']);
+		if(!empty($task_cloud['auditors'])) $task_data['auditors'] = json_encode($task_cloud['auditors']);
+		if(!empty($task_cloud['closedBy'])) $task_data['closed_by'] = $task_cloud['closedBy'];
+		if(!empty($task_cloud['priority'])) $task_data['priority'] = $task_cloud['priority'];
+		if(!empty($task_cloud['statusChangedDate'])) $task_data['status_changed_date'] = date('Y-m-d H:i:s', strtotime($task_cloud['statusChangedDate']));
+		if(!empty($task_cloud['closedDate'])) $task_data['closed_date'] = date('Y-m-d H:i:s', strtotime($task_cloud['closedDate']));
+		if(!empty($task_cloud['dateStart'])) $task_data['date_start'] = date('Y-m-d H:i:s', strtotime($task_cloud['dateStart']));
+		if(!empty($task_cloud['deadline'])) $task_data['deadline'] = date('Y-m-d H:i:s', strtotime($task_cloud['deadline']));
+		if(!empty($task_cloud['commentsCount'])) $task_data['comments_count'] = $task_cloud['commentsCount'];
+		if(!empty($task_cloud['taskControl'])) $task_data['task_control'] = $task_cloud['taskControl'];
+		if(!empty($task_cloud['subordinate'])) $task_data['subordinate'] = $task_cloud['subordinate'];
+		if(!empty($task_cloud['favorite'])) $task_data['favorite'] = $task_cloud['favorite'];
+		if(!empty($task_cloud['viewedDate'])) $task_data['viewed_date'] = date('Y-m-d H:i:s', strtotime($task_cloud['viewedDate']));
+		if(!empty($task_cloud['allowChangeDeadline'])) $task_data['allow_change_deadline'] = $task_cloud['allowChangeDeadline'];
+
+		return $task_data;
 	}
 
 	public static function getCloudTasksID($start = 0){

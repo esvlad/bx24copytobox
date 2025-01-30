@@ -1,4 +1,9 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+ini_set('log_errors', 'On');
+ini_set('error_log', 'D:\Webservers\OSPanel\domains\bx24copytobox\logs/php-errors.log');
 ini_set('max_execution_time', 0);
 set_time_limit(0);
 

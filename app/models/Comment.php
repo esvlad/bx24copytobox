@@ -6,17 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 use Esvlad\Bx24copytobox\Models\User;
+use Esvlad\Bx24copytobox\Models\Disk;
 use Esvlad\Bx24copytobox\Models\Crm;
 
 class Comment extends Model{
 	protected $table = "comments";
+	private $task_folder_id = 945077;
 
 	public static function setTaskCommentsBox($task_id, $comments = []){
 		foreach($comments as $value){
 			$comment_cloud_id = $value['ID'];
-			$comment = self::handlerFields($value);
+			$comment = self::handlerFields($task_id, $value);
 			$comment_box_id = $comment['ID'];
 			unset($comment['ID']);
+
+			if(!empty($value['ATTACHED_OBJECTS'])){
+				$comment['ATTACHED_OBJECTS'] = self::setCommentsFiles($task_id, $fields['ATTACHED_OBJECTS']);
+			}
 
 			if($comment_box_id === false){
 				$author_id = $comment['AUTHOR_ID'];
@@ -50,7 +56,7 @@ class Comment extends Model{
 		return false;
 	}
 
-	public static function handlerFields($fields){
+	public static function handlerFields($task_id, $fields){
 		$comment = [];
 
 		if(!self::where('new_id', $fields['ID'])->exists()){
@@ -72,21 +78,17 @@ class Comment extends Model{
 			$comment['POST_MESSAGE'] = self::remove_bbcode($fields['POST_MESSAGE']);
 		}
 
-		#########################################
-		if(!empty($fields['ATTACHED_OBJECTS'])){
-			$comment['ATTACHED_OBJECTS'] = self::setCommentsFiles($fields['ATTACHED_OBJECTS']);
-		}
-
 		return $comment;
 	}
 
-	public static function setCommentsFiles($attached_objects){
+	public static function setCommentsFiles($task_title, $attached_objects){
 		$attached = [];
+		$folder_id = Disk::hasFolderBox(945077, $task_id);
+
 		foreach($attached_objects as $attached_object){
-			//Проверить наличие папки клиента или добавить
-			//Проверить наличие папки Файлы к задачам или добавить
-			//Проверить наличие папки задачи или добавить
-			//$file_box_id = Загрузить файл к задаче UF_FORUM_MESSAGE_DOC
+			if($attached_object['SIZE'] < '1024000'){
+				$attached[] = Disk::setFileBox($folder_id, $attached_object['NAME'], $attached_object['DOWNLOAD_URL']);
+			}
 		}
 
 		return $attached;

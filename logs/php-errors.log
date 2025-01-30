@@ -1,0 +1,569 @@
+[29-Jan-2025 19:20:06 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:20:06 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:20:06 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:20:06 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:20:06 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:20:06 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[29-Jan-2025 19:20:32 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:20:32 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:20:32 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:20:32 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:20:32 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:20:32 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[29-Jan-2025 19:21:24 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:21:24 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:21:24 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:21:24 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:21:24 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:21:24 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[29-Jan-2025 19:22:03 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:22:03 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:22:03 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:22:03 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:22:03 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:22:03 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[29-Jan-2025 19:22:15 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:22:15 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:22:15 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:22:15 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:22:15 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:22:15 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[29-Jan-2025 19:22:33 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:22:33 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:22:33 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:22:33 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:22:33 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:22:33 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[29-Jan-2025 19:23:28 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:23:28 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:23:28 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:23:28 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:23:28 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:23:28 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[29-Jan-2025 19:24:23 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:24:23 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:24:23 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:24:23 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:24:23 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:24:23 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[29-Jan-2025 19:24:29 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:24:29 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:24:29 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:24:29 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:24:29 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:24:29 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[29-Jan-2025 19:25:10 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 178
+[29-Jan-2025 19:25:10 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 178
+[29-Jan-2025 19:25:10 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 178
+[29-Jan-2025 19:25:10 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:25:10 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:25:10 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(128): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(128): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[29-Jan-2025 19:25:38 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:25:38 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:25:38 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 177
+[29-Jan-2025 19:25:38 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:25:38 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:25:38 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[29-Jan-2025 19:26:26 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 178
+[29-Jan-2025 19:26:26 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 178
+[29-Jan-2025 19:26:26 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 178
+[29-Jan-2025 19:26:26 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:26:26 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:26:26 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[29-Jan-2025 19:26:44 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Task.php on line 178
+[29-Jan-2025 19:26:44 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 178
+[29-Jan-2025 19:26:44 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 178
+[29-Jan-2025 19:26:44 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:26:44 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[29-Jan-2025 19:26:44 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, 136, 291, 291, Array, Array, 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(127): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[30-Jan-2025 18:08:06 Europe/Moscow] PHP Warning:  Array to string conversion in S:\domains\bx24copytobox\vendor\illuminate\support\Str.php on line 1058
+[30-Jan-2025 18:08:06 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(135): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `title`, `description`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `allow_change_deadline`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, CRM: Тестовая задача не обращайте внимание, Какой-то текст у тестовой задачи.
+
+Не очень большой, 136, 291, 291, Array, [136,203,291], 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, 2025-01-31 09:08:05, 131240)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(135): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[30-Jan-2025 18:13:54 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(135): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `title`, `description`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `allow_change_deadline`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, CRM: Тестовая задача не обращайте внимание, Какой-то текст у тестовой задачи.
+
+Не очень большой, 136, 291, 291, [203], [136,203,291], 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, 2025-01-31 09:13:54, 131241)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(135): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[30-Jan-2025 18:15:39 Europe/Moscow] PHP Warning:  Undefined variable $task_box_id in S:\domains\bx24copytobox\app\models\Task.php on line 137
+[30-Jan-2025 18:15:39 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:39
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(39): PDO->prepare()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(138): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'accomplices' in 'field list' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `title`, `description`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `allow_change_deadline`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, CRM: Тестовая задача не обращайте внимание, Какой-то текст у тестовой задачи.
+
+Не очень большой, 136, 291, 291, [203], [136,203,291], 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, 2025-01-31 09:15:39, ?)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(138): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[30-Jan-2025 18:20:06 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'allow_change_deadline' at row 1 in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:45
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(45): PDOStatement->execute()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(135): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'allow_change_deadline' at row 1 (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `title`, `description`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `allow_change_deadline`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, CRM: Тестовая задача не обращайте внимание, Какой-то текст у тестовой задачи.
+
+Не очень большой, 136, 291, 291, [203], [136,203,291], 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, 2025-01-31 09:20:06, 131242)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:829
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(135): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 829
+[30-Jan-2025 18:22:02 Europe/Moscow] PHP Parse error:  syntax error, unexpected token ",", expecting ")" in S:\domains\bx24copytobox\app\models\Disk.php on line 13
+[30-Jan-2025 18:22:39 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '278847' for key 'old_id' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:45
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(45): PDOStatement->execute()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(135): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\UniqueConstraintViolationException: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '278847' for key 'old_id' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `title`, `description`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `allow_change_deadline`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, CRM: Тестовая задача не обращайте внимание, Какой-то текст у тестовой задачи.
+
+Не очень большой, 136, 291, 291, [203], [136,203,291], 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, Y, 131244)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:824
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(135): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 824
+[30-Jan-2025 18:23:24 Europe/Moscow] PHP Fatal error:  Uncaught Error: Using $this when not in object context in S:\domains\bx24copytobox\app\models\Task.php:236
+Stack trace:
+#0 S:\domains\bx24copytobox\app\models\Task.php(146): Esvlad\Bx24copytobox\Models\Task::setTaskFiles()
+#1 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#2 {main}
+  thrown in S:\domains\bx24copytobox\app\models\Task.php on line 236
+[30-Jan-2025 18:24:50 Europe/Moscow] PHP Fatal error:  Uncaught Error: Access to undeclared static property Esvlad\Bx24copytobox\Models\Task::$task_folder_id in S:\domains\bx24copytobox\app\models\Task.php:34
+Stack trace:
+#0 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#1 {main}
+  thrown in S:\domains\bx24copytobox\app\models\Task.php on line 34
+[30-Jan-2025 18:24:59 Europe/Moscow] PHP Fatal error:  Uncaught Error: Undefined constant Esvlad\Bx24copytobox\Models\Task::task_folder_id in S:\domains\bx24copytobox\app\models\Task.php:34
+Stack trace:
+#0 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#1 {main}
+  thrown in S:\domains\bx24copytobox\app\models\Task.php on line 34
+[30-Jan-2025 18:25:20 Europe/Moscow] PHP Fatal error:  Uncaught Error: Using $this when not in object context in S:\domains\bx24copytobox\app\models\Task.php:34
+Stack trace:
+#0 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#1 {main}
+  thrown in S:\domains\bx24copytobox\app\models\Task.php on line 34
+[30-Jan-2025 18:25:33 Europe/Moscow] PHP Fatal error:  Uncaught Error: Undefined constant Esvlad\Bx24copytobox\Models\Task::task_folder_id in S:\domains\bx24copytobox\app\models\Task.php:34
+Stack trace:
+#0 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#1 {main}
+  thrown in S:\domains\bx24copytobox\app\models\Task.php on line 34
+[30-Jan-2025 18:25:42 Europe/Moscow] PHP Fatal error:  Uncaught Error: Access to undeclared static property Esvlad\Bx24copytobox\Models\Task::$task_folder_id in S:\domains\bx24copytobox\app\models\Task.php:34
+Stack trace:
+#0 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#1 {main}
+  thrown in S:\domains\bx24copytobox\app\models\Task.php on line 34
+[30-Jan-2025 18:25:55 Europe/Moscow] PHP Warning:  Undefined variable $task_folder_id in S:\domains\bx24copytobox\app\models\Task.php on line 34
+[30-Jan-2025 18:26:42 Europe/Moscow] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '278847' for key 'old_id' in S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php:45
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(45): PDOStatement->execute()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(816): Illuminate\Database\MySqlConnection->Illuminate\Database\{closure}()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#3 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#4 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#5 S:\domains\bx24copytobox\app\models\Task.php(135): Illuminate\Database\Query\Builder->insert()
+#6 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#7 {main}
+
+Next Illuminate\Database\UniqueConstraintViolationException: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '278847' for key 'old_id' (Connection: default, SQL: insert into `tasks_data` (`old_id`, `created_date`, `changed_date`, `status`, `title`, `description`, `created_by`, `responsible_id`, `changed_by`, `accomplices`, `auditors`, `priority`, `status_changed_date`, `deadline`, `comments_count`, `task_control`, `subordinate`, `favorite`, `viewed_date`, `allow_change_deadline`, `new_id`) values (278847, 2024-10-17 17:14:26, 2024-10-29 09:50:10, 2, CRM: Тестовая задача не обращайте внимание, Какой-то текст у тестовой задачи.
+
+Не очень большой, 136, 291, 291, [203], [136,203,291], 1, 2024-10-29 09:50:10, 2024-10-24 16:00:00, 6, Y, Y, N, 2025-01-29 19:15:59, Y, 131246)) in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php:824
+Stack trace:
+#0 S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback()
+#1 S:\domains\bx24copytobox\vendor\illuminate\database\MySqlConnection.php(50): Illuminate\Database\Connection->run()
+#2 S:\domains\bx24copytobox\vendor\illuminate\database\Query\Builder.php(3458): Illuminate\Database\MySqlConnection->insert()
+#3 S:\domains\bx24copytobox\app\models\Task.php(135): Illuminate\Database\Query\Builder->insert()
+#4 S:\domains\bx24copytobox\console\task.php(48): Esvlad\Bx24copytobox\Models\Task::getTaskCloudToBox()
+#5 {main}
+  thrown in S:\domains\bx24copytobox\vendor\illuminate\database\Connection.php on line 824
+[30-Jan-2025 18:27:01 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 35
+[30-Jan-2025 18:27:01 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Disk.php on line 35
+[30-Jan-2025 18:27:01 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 53
+[30-Jan-2025 18:27:01 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 266
+[30-Jan-2025 18:27:01 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 266
+[30-Jan-2025 18:27:01 Europe/Moscow] PHP Deprecated:  base64_encode(): Passing null to parameter #1 ($string) of type string is deprecated in S:\domains\bx24copytobox\app\models\Disk.php on line 60
+[30-Jan-2025 18:27:01 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 64
+[30-Jan-2025 18:27:01 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 267
+[30-Jan-2025 18:27:01 Europe/Moscow] PHP Parse error:  syntax error, unexpected token "=>", expecting ")" in S:\domains\bx24copytobox\app\models\Comment.php on line 38
+[30-Jan-2025 18:30:42 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 37
+[30-Jan-2025 18:30:42 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Disk.php on line 37
+[30-Jan-2025 18:30:42 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 55
+[30-Jan-2025 18:30:42 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:30:42 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:30:42 Europe/Moscow] PHP Deprecated:  base64_encode(): Passing null to parameter #1 ($string) of type string is deprecated in S:\domains\bx24copytobox\app\models\Disk.php on line 62
+[30-Jan-2025 18:30:42 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 66
+[30-Jan-2025 18:30:42 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 273
+[30-Jan-2025 18:30:42 Europe/Moscow] PHP Parse error:  syntax error, unexpected token "=>", expecting ")" in S:\domains\bx24copytobox\app\models\Comment.php on line 38
+[30-Jan-2025 18:31:11 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 39
+[30-Jan-2025 18:31:11 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Disk.php on line 39
+[30-Jan-2025 18:31:11 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 57
+[30-Jan-2025 18:31:11 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:31:11 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:31:11 Europe/Moscow] PHP Deprecated:  base64_encode(): Passing null to parameter #1 ($string) of type string is deprecated in S:\domains\bx24copytobox\app\models\Disk.php on line 64
+[30-Jan-2025 18:31:11 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 68
+[30-Jan-2025 18:31:11 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 273
+[30-Jan-2025 18:31:11 Europe/Moscow] PHP Parse error:  syntax error, unexpected token "=>", expecting ")" in S:\domains\bx24copytobox\app\models\Comment.php on line 38
+[30-Jan-2025 18:33:03 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 37
+[30-Jan-2025 18:33:03 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Disk.php on line 37
+[30-Jan-2025 18:33:03 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 55
+[30-Jan-2025 18:33:03 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:33:03 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:33:03 Europe/Moscow] PHP Deprecated:  base64_encode(): Passing null to parameter #1 ($string) of type string is deprecated in S:\domains\bx24copytobox\app\models\Disk.php on line 62
+[30-Jan-2025 18:33:03 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 66
+[30-Jan-2025 18:33:03 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 273
+[30-Jan-2025 18:33:04 Europe/Moscow] PHP Parse error:  syntax error, unexpected token "=>", expecting ")" in S:\domains\bx24copytobox\app\models\Comment.php on line 38
+[30-Jan-2025 18:33:47 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 38
+[30-Jan-2025 18:33:47 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Disk.php on line 38
+[30-Jan-2025 18:33:47 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 56
+[30-Jan-2025 18:33:47 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:33:47 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:33:47 Europe/Moscow] PHP Deprecated:  base64_encode(): Passing null to parameter #1 ($string) of type string is deprecated in S:\domains\bx24copytobox\app\models\Disk.php on line 63
+[30-Jan-2025 18:33:47 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 67
+[30-Jan-2025 18:33:47 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 273
+[30-Jan-2025 18:33:47 Europe/Moscow] PHP Parse error:  syntax error, unexpected token "=>", expecting ")" in S:\domains\bx24copytobox\app\models\Comment.php on line 38
+[30-Jan-2025 18:34:46 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 56
+[30-Jan-2025 18:34:46 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:34:46 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:34:46 Europe/Moscow] PHP Deprecated:  base64_encode(): Passing null to parameter #1 ($string) of type string is deprecated in S:\domains\bx24copytobox\app\models\Disk.php on line 63
+[30-Jan-2025 18:34:47 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 67
+[30-Jan-2025 18:34:47 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 273
+[30-Jan-2025 18:34:47 Europe/Moscow] PHP Parse error:  syntax error, unexpected token "=>", expecting ")" in S:\domains\bx24copytobox\app\models\Comment.php on line 38
+[30-Jan-2025 18:35:27 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 36
+[30-Jan-2025 18:35:27 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Disk.php on line 36
+[30-Jan-2025 18:35:27 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 55
+[30-Jan-2025 18:35:27 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:35:27 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:35:27 Europe/Moscow] PHP Deprecated:  base64_encode(): Passing null to parameter #1 ($string) of type string is deprecated in S:\domains\bx24copytobox\app\models\Disk.php on line 62
+[30-Jan-2025 18:35:27 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 66
+[30-Jan-2025 18:35:27 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 273
+[30-Jan-2025 18:35:28 Europe/Moscow] PHP Parse error:  syntax error, unexpected token "=>", expecting ")" in S:\domains\bx24copytobox\app\models\Comment.php on line 38
+[30-Jan-2025 18:35:57 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 36
+[30-Jan-2025 18:35:57 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Disk.php on line 36
+[30-Jan-2025 18:35:57 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 55
+[30-Jan-2025 18:35:57 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:35:57 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:35:57 Europe/Moscow] PHP Deprecated:  base64_encode(): Passing null to parameter #1 ($string) of type string is deprecated in S:\domains\bx24copytobox\app\models\Disk.php on line 62
+[30-Jan-2025 18:35:57 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 66
+[30-Jan-2025 18:35:57 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 273
+[30-Jan-2025 18:35:57 Europe/Moscow] PHP Parse error:  syntax error, unexpected token "=>", expecting ")" in S:\domains\bx24copytobox\app\models\Comment.php on line 38
+[30-Jan-2025 18:36:18 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 55
+[30-Jan-2025 18:36:18 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:36:18 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 272
+[30-Jan-2025 18:36:18 Europe/Moscow] PHP Deprecated:  base64_encode(): Passing null to parameter #1 ($string) of type string is deprecated in S:\domains\bx24copytobox\app\models\Disk.php on line 62
+[30-Jan-2025 18:36:18 Europe/Moscow] PHP Warning:  Undefined array key "result" in S:\domains\bx24copytobox\app\models\Disk.php on line 66
+[30-Jan-2025 18:36:18 Europe/Moscow] PHP Warning:  Trying to access array offset on value of type null in S:\domains\bx24copytobox\app\models\Task.php on line 273
+[30-Jan-2025 18:36:18 Europe/Moscow] PHP Parse error:  syntax error, unexpected token "=>", expecting ")" in S:\domains\bx24copytobox\app\models\Comment.php on line 38
