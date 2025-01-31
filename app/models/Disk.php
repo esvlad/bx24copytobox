@@ -50,9 +50,12 @@ class Disk{
 	public static function getFile($file_id, $crm = 'box'){
 		$method = ($crm == 'box') ? 'bxBoxCall' : 'bxCloudCall';
 		$result = Crm::$method('disk.file.get', ['id' => $file_id]);
-		print_r($result);
 
-		return $result['result'];
+		if(!empty($result['result'])){
+			return $result['result'];
+		}
+
+		return false;
 	}
 
 	public static function setFileBox($folder_box_id, $file_name, $file_download_url){
