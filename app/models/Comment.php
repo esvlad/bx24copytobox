@@ -14,17 +14,19 @@ class Comment extends Model{
 	private $task_folder_id = 945077;
 
 	public static function setTaskCommentsBox($task_id, $comments = []){
+		$insert_comments = [];
 		foreach($comments as $value){
 			$comment_cloud_id = $value['ID'];
 			$comment = self::handlerFields($task_id, $value);
-			$comment_box_id = $comment['ID'];
-			unset($comment['ID']);
+			//$comment_box_id = $comment['ID'];
+			//unset($comment['ID']);
 
 			if(!empty($value['ATTACHED_OBJECTS'])){
-				$comment['ATTACHED_OBJECTS'] = self::setCommentsFiles($task_id, $fields['ATTACHED_OBJECTS']);
+				//$comment['ATTACHED_OBJECTS'] = self::setCommentsFiles($task_id, $fields['ATTACHED_OBJECTS']);
+				self::setCommentsFiles($comment_cloud_id, $fields['ATTACHED_OBJECTS']);
 			}
 
-			if($comment_box_id === false){
+			/*if($comment_box_id === false){
 				$author_id = $comment['AUTHOR_ID'];
 				$comment['AUTHOR_ID'] = 1;
 
@@ -36,8 +38,18 @@ class Comment extends Model{
 			} else {
 				Crm::bxBoxCall('task.commentitem.update', [$task_id, $comment_id, $comment]);
 				self::where('task_new_id' => $task_id, 'new_id' => $comment_box_id)->update(['author_id' => $author_id, 'create_comment' => date('Y-m-d H:i:s', strtotime($comment['POST_DATE']))]);
-			}
+			}*/
+
+			$insert_comments[] = [
+				'old_id' => $comment_cloud_id,
+				'task_old_id' => $task_id,
+				'author_id' => $comment['AUTHOR_ID'],
+				'post_date' => $comment['POST_DATE'],
+				'post_message' => $comment['POST_MESSAGE']
+			];
 		}
+
+		Capsule::table('comments_data')->insert($insert_comments);
 	}
 
 	public static function getTaskComments($task_id, $box = false){
@@ -70,7 +82,7 @@ class Comment extends Model{
 			$author_name = $fields['AUTHOR_NAME'];
 		}
 		$comment['AUTHOR_ID'] = $author_id;
-		$comment['POST_DATE'] = $fields['POST_DATE'];
+		$comment['POST_DATE'] = date('Y-m-d H:i:s', strtotime($fields['POST_DATE']));
 
 		if(!empty($author_name)){
 			$comment['POST_MESSAGE'] = '[B]' . $author_name . ':[/B] ' . self::remove_bbcode($fields['POST_MESSAGE']);
@@ -81,17 +93,38 @@ class Comment extends Model{
 		return $comment;
 	}
 
-	public static function setCommentsFiles($task_title, $attached_objects){
+	public static function setCommentsFiles($comment_cloud_id, $attached_objects){ //$task_title -> comment_cloud_id
 		$attached = [];
-		$folder_id = Disk::hasFolderBox(945077, $task_id);
+		//$folder_id = Disk::hasFolderBox(945077, $task_id);
 
+		$insert_task_comments_files = [];
 		foreach($attached_objects as $attached_object){
 			if($attached_object['SIZE'] < '1024000'){
-				$attached[] = Disk::setFileBox($folder_id, $attached_object['NAME'], $attached_object['DOWNLOAD_URL']);
+				//$attached[] = Disk::setFileBox($folder_id, $attached_object['NAME'], $attached_object['DOWNLOAD_URL']);
+				$file_cloud_info = Disk::getFile($attached_object['FILE_ID'], 'cloud');
+
+				if($file_cloud_info !== false){
+					$insert_task_comments_files[] = [
+						'old_id' => $file_cloud_info['ID'],
+						'comments_old_id' => $comment_cloud_id,
+						'name' => $file_cloud_info['NAME'],
+						'create_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['CREATE_TIME'])),
+						'update_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['UPDATE_TIME'])),
+						'created_by' => Crm::getBoxUserId($file_cloud_info['CREATED_BY']),
+						'updated_by' => Crm::getBoxUserId($file_cloud_info['UPDATED_BY']),
+						'download_url' => $file_cloud_info['DOWNLOAD_URL'],
+						'detail_url' => $file_cloud_info['DETAIL_URL'],
+					];
+				}
 			}
 		}
 
-		return $attached;
+		if(!empty($insert_task_comments_files)){
+			Capsule::table('comments_files')->insert($insert_task_comments_files);
+			unset($insert_task_comments_files);
+		}
+
+		//return $attached;
 	}
 
 	public static function setDuplicatesComments(){

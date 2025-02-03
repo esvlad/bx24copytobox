@@ -42,27 +42,39 @@ class Task extends Model{
 				$task_cloud = self::handlerFields($task);
 
 
-				/*if($hasTaskDB->exists()){
+				if($hasTaskDB->exists()){
 					$task_box_id = $hasTaskDB->value('new_id');
 
-					$task_box = self::getTaskBox($task_box_id);
+					//$task_box = self::getTaskBox($task_box_id);
 
 					//Проверить наличие чек-листа и добавить к задаче
 					if(!empty($task_cloud['checklist'])){
-						self::setChekLists($task_box_id, $task_cloud['checklist']);
+						//self::setChekLists($task_box_id, $task_cloud['checklist']);
+						self::setChekLists($task['id'], $task_cloud_checklist);
 					}
 
 					//Проверить наличие файлов и добавить к задаче
 					if(!empty($task_cloud['ufTaskWebdavFiles'])){
-						self::setTaskFiles($task_box_id, $task_cloud['ufTaskWebdavFiles']);
+						//self::setTaskFiles($task_box_id, $task_cloud['ufTaskWebdavFiles']);
+						self::setTaskFiles($task['id'], $task_cloud['title'], $task_cloud['ufTaskWebdavFiles'], true);
 					}
 
 					$task_data = self::handlerData($task_cloud);
+
+					if(!empty($old_parent_id)){
+						$task_data['old_parent_id'] = $old_parent_id;
+						//$task_data['new_parent_id'] = $task_cloud['parentId'];
+					}
+
+					$task_data['new_id'] = $task_box_id;
+
 					Capsule::table('tasks_data')->insert($task_data);
 
+					$task_comments_cloud = Comment::getTaskComments($task['id']);
+					Comment::setTaskCommentsBox($task['id'], $task_comments_cloud);
+					unset($task_comments_cloud);
 
-					if($task_box['commentsCount'] != $task_cloud['commentsCount']){
-						$task_comments_cloud = Comment::getTaskComments($task['id']);
+					/*if($task_box['commentsCount'] != $task_cloud['commentsCount']){
 						$task_comments_box = Comment::getTaskComments($task_box_id, true);
 
 						if(!empty($task_comments_box)){
@@ -79,16 +91,14 @@ class Task extends Model{
 							Comment::setTaskCommentsBox($task_comments_cloud);
 						}
 
-						unset($task_comments_cloud);
 						unset($task_comments_box);
-					}
+						unset($task_comments_cloud);
+					}*/
 
 					unset($task_box);
-				} else */
-
-				if(!$hasTaskDB->exists()){
+				} else {
 					$task_data = self::handlerData($task_cloud);
-					$new_task_cloud = [];
+					/*$new_task_cloud = [];
 					foreach($task_data as $key => $value){
 						$new_task_cloud[strtoupper($key)] = $value;
 					}
@@ -101,7 +111,7 @@ class Task extends Model{
 
 					$new_task_cloud['CREATED_BY'] = 1;
 					$new_task_cloud['RESPONSIBLE_ID'] = 1;
-					$new_task_cloud['CHANGED_BY'] = 1;
+					$new_task_cloud['CHANGED_BY'] = 1;*/
 
 					if(!empty($task_cloud['checklist'])){
 						$task_cloud_checklist = $task_cloud['checklist'];
@@ -113,7 +123,7 @@ class Task extends Model{
 						unset($task_cloud['ufTaskWebdavFiles']);
 					}
 
-					if(!empty($task_cloud['accomplices'])){
+					/*if(!empty($task_cloud['accomplices'])){
 						unset($task_cloud['accomplices']);
 					}
 
@@ -123,41 +133,50 @@ class Task extends Model{
 
 					if(!empty($task_cloud['closedBy'])){
 						$task_cloud['closedBy'] = 1;
-					}
+					}*/
 
 					if(!empty($old_parent_id)){
 						$task_data['old_parent_id'] = $old_parent_id;
-						$task_data['new_parent_id'] = $task_cloud['parentId'];
+						//$task_data['new_parent_id'] = $task_cloud['parentId'];
 					}
 
-					$box_id = Capsule::table('tasks_data')->where('old_id', $task_data['old_id']);
+					Capsule::table('tasks_data')->insert($task_data);
+
+					/*$box_id = Capsule::table('tasks_data')->where('old_id', $task_data['old_id']);
 					if($box_id->exists()){
 						$task_box_id = $box_id->value('new_id');
 					} else {
 						$task_box_id = self::setTaskBox($new_task_cloud);
 						$task_data['new_id'] = $task_box_id;
 						Capsule::table('tasks_data')->insert($task_data);
-					}
+					}*/
 
 					unset($task_data);
-					unset($new_task_cloud);
+					//unset($new_task_cloud);
 
 					//Проверить наличие чек-листа и добавить к задаче
 					if(!empty($task_cloud_checklist)){
-						self::setChekLists($task_box_id, $task_cloud_checklist);
+						//self::setChekLists($task_box_id, $task_cloud_checklist);
+						self::setChekLists($task['id'], $task_cloud_checklist);
 					}
 
 					//Проверить наличие файлов и добавить к задаче
 					if(!empty($task_cloud_files)){
-						self::setTaskFiles($task_box_id, $task_cloud['title'], $task_cloud_files, true);
+						//self::setTaskFiles($task_box_id, $task_cloud['title'], $task_cloud_files, true);
+						self::setTaskFiles($task['id'], $task_cloud['title'], $task_cloud_files, true);
 					}
 
 					//Проверить наличие комментариев и добавить к задаче
-					$task_comments_cloud = Comment::getTaskComments($task_box_id);
+
+					$task_comments_cloud = Comment::getTaskComments($task['id'], true);
+					Comment::setTaskCommentsBox($task['id'], $task_comments_cloud);
+					unset($task_comments_cloud);
+
+					/*$task_comments_cloud = Comment::getTaskComments($task_box_id);
 					if(!empty($task_comments_cloud)){
 						Comment::setTaskCommentsBox($task_box_id, $task_comments_cloud);
 						unset($task_comments_cloud);
-					}
+					}*/
 				}
 
 				unset($task_cloud);
@@ -187,14 +206,13 @@ class Task extends Model{
 	}
 
 	public static function setTaskBox($task){
-		print_r($task);
 		$result = Crm::bxBoxCall('tasks.task.add', ['fields' => $task]);
 
 		return $result['result']['task']['id'];
 	}
 
 	public static function setChekLists($task_box_id, $checklists){
-		$task_box = Crm::bxBoxCall('task.checklistitem.getlist', [$task_box_id]);
+		/*$task_box = Crm::bxBoxCall('task.checklistitem.getlist', [$task_box_id]);
 
 		if(!empty($task_box['result'])){
 			if(count($task_box['result']) == count($checklists)){
@@ -212,11 +230,12 @@ class Task extends Model{
 			}
 		}
 
-		unset($task_box);
+		unset($task_box);*/
 
-		$box_batch_list = [];
+		//$box_batch_list = [];
+		$insert_checklist = [];
 		foreach($checklists as $checklist){
-			$box_batch_list[] = [
+			/*$box_batch_list[] = [
 				'method' => 'task.checklistitem.add',
 				'params' => [
 					$task_box_id,
@@ -230,16 +249,30 @@ class Task extends Model{
 						'PARENT_ID' => '$result[0]'
 					]
 				]
+			];*/
+
+			$insert_checklist[] = [
+				'task_old_id' => $task_box_id,
+				'title' => $checklist['TITLE'],
+				'created_by' => Crm::getBoxUserId($checklist['CREATED_BY']),
+				'is_complete' => $checklist['IS_COMPLETE'],
+				'is_important' => $checklist['IS_IMPORTANT'],
+				'sort_index' => $checklist['SORT_INDEX'],
+				'toggled_by' => $checklist['TOGGLED_BY'],
 			];
 		}
 
-		Crm::bxBoxCallBatch($box_batch_list);
-		unset($box_batch_list);
+		if(!empty($insert_checklist)){
+			Capsule::table('tasks_checklist')->insert($insert_checklist);
+		}
+
+		/*Crm::bxBoxCallBatch($box_batch_list);
+		unset($box_batch_list);*/
 	}
 
-	public static function setTaskFiles($task_box_id, $task_title, $task_files, $new = false){
+	public static function setTaskFiles($task_id, $task_title, $task_files, $new = false){ //$task_box_id
 		//Добавить папку
-		$folder_id = Disk::setFolderBox(945077, $task_title);
+		/*$folder_id = Disk::setFolderBox(945077, $task_title);
 
 		if($new === false){
 			$task_box = Crm::bxBoxCall('tasks.task.get', [
@@ -256,14 +289,28 @@ class Task extends Model{
 			}
 
 			unset($task_box);
-		}
+		}*/
 
 		$files_box = [];
+		$insert_task_files = [];
 		foreach($task_files as $key => $file_cloud_id){
 			$file_cloud_info = Disk::getFile($file_cloud_id, 'cloud');
 
+			$insert_task_files[] = [
+				'old_id' => $file_cloud_id,
+				'task_old_id' => $task_id,
+				'name' => $file_cloud_info['NAME'],
+				'create_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['CREATE_TIME'])),
+				'update_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['UPDATE_TIME'])),
+				'created_by' => Crm::getBoxUserId($file_cloud_info['CREATED_BY']),
+				'updated_by' => Crm::getBoxUserId($file_cloud_info['UPDATED_BY']),
+				'download_url' => $file_cloud_info['DOWNLOAD_URL'],
+				'detail_url' => $file_cloud_info['DETAIL_URL'],
+			];
+
+
 			//Проверить существует ли файл (чтобы не загружать повторно)
-			if(!empty($task_files_box)){
+			/*if(!empty($task_files_box)){
 				$has_file_box = in_array($file_cloud_info['NAME'], $task_files_box);
 			}
 
@@ -274,11 +321,13 @@ class Task extends Model{
 			}
 
 			unset($file_cloud_info);
-			unset($task_files_box);
+			unset($task_files_box);*/
 		}
 
+		Capsule::table('tasks_files')->insert($insert_task_files);
+
 		//Добавить файлы к задаче
-		if(!empty($files_box)){
+		/*if(!empty($files_box)){
 			$box_batch_list = [];
 			foreach($files_box as $key => $file_id){
 				$box_batch_list[] = [
@@ -294,7 +343,7 @@ class Task extends Model{
 
 			unset($files_box);
 			unset($box_batch_list);
-		}
+		}*/
 	}
 
 	public static function handlerFields($task = []){
