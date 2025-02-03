@@ -19,8 +19,8 @@ class Task extends Model{
 
 		$params = [
 			'select' => ['*', 'UF_*'],
-			'filter' => ["ID" => "278847"],
-			'order' => ['ID' => 'DESC'],
+			'filter' => [">CREATED_DATE" => "2024-01-01", "<CREATED_DATE" => "2024-12-31"],
+			'order' => ['ID' => 'asc'],
 			'start' => $start
 		];
 
@@ -95,7 +95,7 @@ class Task extends Model{
 						unset($task_comments_cloud);
 					}*/
 
-					unset($task_box);
+					//unset($task_box);
 				} else {
 					$task_data = self::handlerData($task_cloud);
 					/*$new_task_cloud = [];
@@ -168,7 +168,7 @@ class Task extends Model{
 
 					//Проверить наличие комментариев и добавить к задаче
 
-					$task_comments_cloud = Comment::getTaskComments($task['id'], true);
+					$task_comments_cloud = Comment::getTaskComments($task['id']);
 					Comment::setTaskCommentsBox($task['id'], $task_comments_cloud);
 					unset($task_comments_cloud);
 
@@ -296,18 +296,21 @@ class Task extends Model{
 		foreach($task_files as $key => $file_cloud_id){
 			$file_cloud_info = Disk::getFile($file_cloud_id, 'cloud');
 
-			$insert_task_files[] = [
-				'old_id' => $file_cloud_id,
-				'task_old_id' => $task_id,
-				'name' => $file_cloud_info['NAME'],
-				'create_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['CREATE_TIME'])),
-				'update_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['UPDATE_TIME'])),
-				'created_by' => Crm::getBoxUserId($file_cloud_info['CREATED_BY']),
-				'updated_by' => Crm::getBoxUserId($file_cloud_info['UPDATED_BY']),
-				'download_url' => $file_cloud_info['DOWNLOAD_URL'],
-				'detail_url' => $file_cloud_info['DETAIL_URL'],
-			];
+			if($file_cloud_info !== false){
+				$insert_task_files[] = [
+					'old_id' => $file_cloud_id,
+					'task_old_id' => $task_id,
+					'name' => $file_cloud_info['NAME'],
+					'create_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['CREATE_TIME'])),
+					'update_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['UPDATE_TIME'])),
+					'created_by' => Crm::getBoxUserId($file_cloud_info['CREATED_BY']),
+					'updated_by' => Crm::getBoxUserId($file_cloud_info['UPDATED_BY']),
+					'download_url' => $file_cloud_info['DOWNLOAD_URL'],
+					'detail_url' => $file_cloud_info['DETAIL_URL'],
+				];
+			}
 
+			unset($file_cloud_info);
 
 			//Проверить существует ли файл (чтобы не загружать повторно)
 			/*if(!empty($task_files_box)){
@@ -324,7 +327,12 @@ class Task extends Model{
 			unset($task_files_box);*/
 		}
 
-		Capsule::table('tasks_files')->insert($insert_task_files);
+		if(!empty($insert_task_files)){
+			Capsule::table('tasks_files')->insert($insert_task_files);
+			unset($insert_task_files);
+			unset($task_files);
+		}
+
 
 		//Добавить файлы к задаче
 		/*if(!empty($files_box)){
@@ -404,7 +412,9 @@ class Task extends Model{
 						}
 
 						if(!empty($crm_data)){
-							$task[$key] = $crm_data;
+							$crm_data_explode = explode('_', $crm_data);
+							$task['uf_crm_type'] = $crm_data_explode[0];
+							$task['uf_crm_id'] = $crm_data_explode[1];
 						} else {
 							unset($task[$key]);
 						}
@@ -447,6 +457,9 @@ class Task extends Model{
 		if(!empty($task_cloud['favorite'])) $task_data['favorite'] = $task_cloud['favorite'];
 		if(!empty($task_cloud['viewedDate'])) $task_data['viewed_date'] = date('Y-m-d H:i:s', strtotime($task_cloud['viewedDate']));
 		if(!empty($task_cloud['allowChangeDeadline'])) $task_data['allow_change_deadline'] = $task_cloud['allowChangeDeadline'];
+
+		if(!empty($task_cloud['uf_crm_type'])) $task_data['uf_crm_type'] = $task_cloud['uf_crm_type'];
+		if(!empty($task_cloud['uf_crm_id'])) $task_data['uf_crm_id'] = $task_cloud['uf_crm_id'];
 
 		return $task_data;
 	}
