@@ -13,8 +13,8 @@ class Task extends Model{
 	protected $table = "tasks";
 	private $task_folder_id = 945077;
 
-	public static function getTaskCloudToBox($start = 0){
-		print(date('d.m.Y H:i:s') . " Выполнено шагов - 1000" . $start . "\r\n");
+	public static function getTaskCloudToBox($start = 34700){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
 		Capsule::table('counters')->where('type', 'task')->update(['start' => $start]);
 
 		$params = [
@@ -48,10 +48,10 @@ class Task extends Model{
 					//$task_box = self::getTaskBox($task_box_id);
 
 					//Проверить наличие чек-листа и добавить к задаче
-					if(!empty($task_cloud['checklist'])){
+					/*if(!empty($task_cloud['checklist'])){
 						//self::setChekLists($task_box_id, $task_cloud['checklist']);
 						self::setChekLists($task['id'], $task_cloud_checklist);
-					}
+					}*/
 
 					//Проверить наличие файлов и добавить к задаче
 					if(!empty($task_cloud['ufTaskWebdavFiles'])){
@@ -68,7 +68,11 @@ class Task extends Model{
 
 					$task_data['new_id'] = $task_box_id;
 
-					Capsule::table('tasks_data')->insert($task_data);
+					$has_task_data_db = Capsule::table('tasks_data')->where('old_id', $task_data['old_id']);
+					if(!$has_task_data_db->exists()){
+						$task_data['description'] = iconv("UTF-8","UTF-8//IGNORE", $task_data['description']);
+						Capsule::table('tasks_data')->insert($task_data);
+					}
 
 					$task_comments_cloud = Comment::getTaskComments($task['id']);
 					Comment::setTaskCommentsBox($task['id'], $task_comments_cloud);
@@ -140,7 +144,11 @@ class Task extends Model{
 						//$task_data['new_parent_id'] = $task_cloud['parentId'];
 					}
 
-					Capsule::table('tasks_data')->insert($task_data);
+					$has_task_data_db = Capsule::table('tasks_data')->where('old_id', $task_data['old_id']);
+					if(!$has_task_data_db->exists()){
+						$task_data['description'] = iconv("UTF-8","UTF-8//IGNORE", $task_data['description']);
+						Capsule::table('tasks_data')->insert($task_data);
+					}
 
 					/*$box_id = Capsule::table('tasks_data')->where('old_id', $task_data['old_id']);
 					if($box_id->exists()){
@@ -155,10 +163,10 @@ class Task extends Model{
 					//unset($new_task_cloud);
 
 					//Проверить наличие чек-листа и добавить к задаче
-					if(!empty($task_cloud_checklist)){
+					/*if(!empty($task_cloud_checklist)){
 						//self::setChekLists($task_box_id, $task_cloud_checklist);
 						self::setChekLists($task['id'], $task_cloud_checklist);
-					}
+					}*/
 
 					//Проверить наличие файлов и добавить к задаче
 					if(!empty($task_cloud_files)){
@@ -297,17 +305,20 @@ class Task extends Model{
 			$file_cloud_info = Disk::getFile($file_cloud_id, 'cloud');
 
 			if($file_cloud_info !== false){
-				$insert_task_files[] = [
-					'old_id' => $file_cloud_id,
-					'task_old_id' => $task_id,
-					'name' => $file_cloud_info['NAME'],
-					'create_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['CREATE_TIME'])),
-					'update_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['UPDATE_TIME'])),
-					'created_by' => Crm::getBoxUserId($file_cloud_info['CREATED_BY']),
-					'updated_by' => Crm::getBoxUserId($file_cloud_info['UPDATED_BY']),
-					'download_url' => $file_cloud_info['DOWNLOAD_URL'],
-					'detail_url' => $file_cloud_info['DETAIL_URL'],
-				];
+				$has_file_db = Capsule::table('tasks_files')->where('old_id', $file_cloud_id);
+				if(!$has_file_db->exists()){
+					$insert_task_files[] = [
+						'old_id' => $file_cloud_id,
+						'task_old_id' => $task_id,
+						'name' => $file_cloud_info['NAME'],
+						'create_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['CREATE_TIME'])),
+						'update_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['UPDATE_TIME'])),
+						'created_by' => Crm::getBoxUserId($file_cloud_info['CREATED_BY']),
+						'updated_by' => Crm::getBoxUserId($file_cloud_info['UPDATED_BY']),
+						'download_url' => $file_cloud_info['DOWNLOAD_URL'],
+						'detail_url' => $file_cloud_info['DETAIL_URL'],
+					];
+				}
 			}
 
 			unset($file_cloud_info);

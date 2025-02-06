@@ -46,11 +46,11 @@ use Esvlad\Bx24copytobox\Models\Comment;
 //Task::removeDuplicatesTask();
 //Task::changeUsersIdInDBTasks();
 
-Task::getTaskCloudToBox();
+//Task::getTaskCloudToBox();
 
 //Comment::setDuplicatesComments();
 //Comment::removeDuplicatesComments();
 
 
 //print_r($task->synchronizationTask(121742));
-//print("Заполнение Базы данных лидов завершен!");
+print("Заполнение Базы данных задач завершен!");

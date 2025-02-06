@@ -41,13 +41,16 @@ class Comment extends Model{
 					self::where('task_new_id' => $task_id, 'new_id' => $comment_box_id)->update(['author_id' => $author_id, 'create_comment' => date('Y-m-d H:i:s', strtotime($comment['POST_DATE']))]);
 				}*/
 
-				$insert_comments[] = [
-					'old_id' => $comment_cloud_id,
-					'task_old_id' => $task_id,
-					'author_id' => $comment['AUTHOR_ID'],
-					'post_date' => $comment['POST_DATE'],
-					'post_message' => $comment['POST_MESSAGE']
-				];
+				$has_comments_data_db = Capsule::table('comments_data')->where('old_id', $comment_cloud_id);
+				if(!$has_comments_data_db->exists()){
+					$insert_comments[] = [
+						'old_id' => $comment_cloud_id,
+						'task_old_id' => $task_id,
+						'author_id' => $comment['AUTHOR_ID'],
+						'post_date' => $comment['POST_DATE'],
+						'post_message' => $comment['POST_MESSAGE']
+					];
+				}
 
 				unset($comment);
 			}
@@ -113,17 +116,20 @@ class Comment extends Model{
 				$file_cloud_info = Disk::getFile($attached_object['FILE_ID'], 'cloud');
 
 				if($file_cloud_info !== false){
-					$insert_task_comments_files[] = [
-						'old_id' => $file_cloud_info['ID'],
-						'comments_old_id' => $comment_cloud_id,
-						'name' => $file_cloud_info['NAME'],
-						'create_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['CREATE_TIME'])),
-						'update_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['UPDATE_TIME'])),
-						'created_by' => Crm::getBoxUserId($file_cloud_info['CREATED_BY']),
-						'updated_by' => Crm::getBoxUserId($file_cloud_info['UPDATED_BY']),
-						'download_url' => $file_cloud_info['DOWNLOAD_URL'],
-						'detail_url' => $file_cloud_info['DETAIL_URL'],
-					];
+					$has_file_db = Capsule::table('comments_files')->where('old_id', $file_cloud_info['ID']);
+					if(!$has_file_db->exists()){
+						$insert_task_comments_files[] = [
+							'old_id' => $file_cloud_info['ID'],
+							'comments_old_id' => $comment_cloud_id,
+							'name' => $file_cloud_info['NAME'],
+							'create_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['CREATE_TIME'])),
+							'update_time' => date('Y-m-d H:i:s', strtotime($file_cloud_info['UPDATE_TIME'])),
+							'created_by' => Crm::getBoxUserId($file_cloud_info['CREATED_BY']),
+							'updated_by' => Crm::getBoxUserId($file_cloud_info['UPDATED_BY']),
+							'download_url' => $file_cloud_info['DOWNLOAD_URL'],
+							'detail_url' => $file_cloud_info['DETAIL_URL'],
+						];
+					}
 				}
 			}
 		}
