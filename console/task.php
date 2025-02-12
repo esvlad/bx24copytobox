@@ -51,6 +51,7 @@ use Esvlad\Bx24copytobox\Models\Comment;
 //Comment::setDuplicatesComments();
 //Comment::removeDuplicatesComments();
 
+Task::setTaskBoxFromTable();
 
 //print_r($task->synchronizationTask(121742));
 print("Заполнение Базы данных задач завершен!");

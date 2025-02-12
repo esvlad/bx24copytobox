@@ -216,49 +216,130 @@ class Task extends Model{
 	public static function setTaskBox($task){
 		$result = Crm::bxBoxCall('tasks.task.add', ['fields' => $task]);
 
-		return $result['result']['task']['id'];
+		if(!empty($result['result'])){
+			return $result['result']['task']['id'];
+		}
+
+		print_r($result);
+
+		return false;
+	}
+
+	public static function setTaskBoxFromTable($start = 33380){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
+		Capsule::table('counters')->where('type', 'task')->update(['start' => $start]);
+
+		$count = Capsule::table('tasks_data')->count();
+		$tasks = Capsule::table('tasks_data')->offset($start)->limit(10)->get();
+
+		if($start < $count) $next = $start + 10;
+
+		if(!empty($tasks)){
+			foreach($tasks as $task){
+				$has_task_box = self::where('old_id', $task->old_id);
+
+				//Если задача есть
+				if($has_task_box->exists()){
+					$task_box_id = $has_task_box->value('new_id');
+					$has_task_files = Capsule::table('tasks_files')->where('task_old_id', $task_box_id);
+
+					//Если файлы есть
+					if($has_task_files->exists()){
+						$count_task_files = $has_task_files->count();
+						$has_task_box_files = self::getTaskBox($task_box_id);
+
+						if($count_task_files > 0){
+							if(!empty($has_task_box_files['ufTaskWebdavFiles'])){
+								if(count($has_task_box_files['ufTaskWebdavFiles']) != $count_task_files){
+									foreach($has_task_files->get() as $file){
+										self::setTaskFilesAttached($task_box_id, $file->new_id);
+									}
+								}
+							} else {
+								foreach($has_task_files->get() as $file){
+									self::setTaskFilesAttached($task_box_id, $file->new_id);
+								}
+							}
+						}
+					}
+
+					Capsule::table('tasks_data')->where('id', $task->id)->update(['new_id' => $task_box_id]);
+				} else {
+					//Подготовка перед добавления задачи
+					$task_data = [];
+
+					$task_data['CREATED_DATE'] = $task->created_date;
+					$task_data['CHANGED_DATE'] = $task->changed_date;
+					$task_data['STATUS'] = $task->status;
+
+					$task_data['TITLE'] = $task->title;
+					$task_data['DESCRIPTION'] = $task->description;
+
+					$task_data['CREATED_BY'] = 1;
+					$task_data['RESPONSIBLE_ID'] = 1;
+					$task_data['CHANGED_BY'] = 1;
+
+					if(!empty($task->changed_by)) $task_data['CHANGED_BY'] = 1;
+					if(!empty($task->closed_by)) $task_data['CLOSED_BY'] = 1;
+					if(!empty($task->priority)) $task_data['PRIORITY'] = $task->priority;
+					if(!empty($task->status_changed_date)) $task_data['STATUS_CHANGED_DATE'] = $task->status_changed_date;
+					if(!empty($task->closed_date)) $task_data['CLOSED_DATE'] = $task->closed_date;
+					if(!empty($task->date_start)) $task_data['DATE_START'] = $task->date_start;
+					if(!empty($task->deadline)) $task_data['DEADLINE'] = $task->deadline;
+					if(!empty($task->task_control)) $task_data['TASK_CONTROL'] = $task->task_control;
+					if(!empty($task->subordinate)) $task_data['SUBORDINATE'] = $task->subordinate;
+					if(!empty($task->favorite)) $task_data['FAVORITE'] = $task->favorite;
+					if(!empty($task->allow_change_deadline)) $task_data['ALLOW_CHANGE_DEADLINE'] = $task->allow_change_deadline;
+
+					if(!empty($task->uf_crm_id)){
+						$task_data['UF_CRM_TASK'] = $task->uf_crm_type . '_' .  $task->uf_crm_id;
+					}
+
+					$has_task_files = Capsule::table('tasks_files')->where('task_old_id', $task_box_id);
+					if($has_task_files->exists()){
+						$uf_task_webdav_files = [];
+						foreach($task_files->get() as $file){
+							$uf_task_webdav_files[] = 'n' . $file->new_id;
+						}
+					}
+
+					if(!empty($uf_task_webdav_files)){
+						$task_data['UF_TASK_WEBDAV_FILES'] = $uf_task_webdav_files;
+					}
+
+					//Добавить задачу
+					$task_box_id = self::setTaskBox($task_data);
+					Capsule::table('tasks_data')->where('id', $task->id)->update(['new_id' => $task_box_id]);
+
+					//добавить комментарии
+					Comment::setTaskCommentsBoxFromTable($task->old_id);
+
+					unset($task_data);
+				}
+			}
+
+			unset($tasks);
+		}
+
+		if(empty($next)){
+			print("Загрузка задач завершена!\r\n");
+			return true;
+		}
+
+		self::setTaskBoxFromTable($next);
+	}
+
+	public static function setTaskFilesAttached($task_id, $file_id){
+		Crm::bxBoxCall('tasks.task.files.attach', [
+			'taskId' => $task_id,
+			'fileId' => $file_id
+		]);
 	}
 
 	public static function setChekLists($task_box_id, $checklists){
-		/*$task_box = Crm::bxBoxCall('task.checklistitem.getlist', [$task_box_id]);
-
-		if(!empty($task_box['result'])){
-			if(count($task_box['result']) == count($checklists)){
-				return true;
-			} else {
-				$box_batch_list = [];
-				foreach($task_box['result'] as $checklist_box){
-					$box_batch_list[] = [
-						'method' => 'task.checklistitem.delete',
-						'params' => [$task_box_id, $checklist_box['ID']]
-					];
-				}
-				Crm::bxBoxCallBatch($box_batch_list);
-				unset($box_batch_list);
-			}
-		}
-
-		unset($task_box);*/
-
 		//$box_batch_list = [];
 		$insert_checklist = [];
 		foreach($checklists as $checklist){
-			/*$box_batch_list[] = [
-				'method' => 'task.checklistitem.add',
-				'params' => [
-					$task_box_id,
-					[
-						'TITLE' => $checklist['TITLE'],
-						'CREATED_BY' => Crm::getBoxUserId($checklist['CREATED_BY']),
-						'IS_COMPLETE' => $checklist['IS_COMPLETE'],
-						'IS_IMPORTANT' => $checklist['IS_IMPORTANT'],
-						'SORT_INDEX' => $checklist['SORT_INDEX'],
-						'TOGGLED_BY' => $checklist['TOGGLED_BY'],
-						'PARENT_ID' => '$result[0]'
-					]
-				]
-			];*/
-
 			$insert_checklist[] = [
 				'task_old_id' => $task_box_id,
 				'title' => $checklist['TITLE'],
@@ -273,32 +354,9 @@ class Task extends Model{
 		if(!empty($insert_checklist)){
 			Capsule::table('tasks_checklist')->insert($insert_checklist);
 		}
-
-		/*Crm::bxBoxCallBatch($box_batch_list);
-		unset($box_batch_list);*/
 	}
 
 	public static function setTaskFiles($task_id, $task_title, $task_files, $new = false){ //$task_box_id
-		//Добавить папку
-		/*$folder_id = Disk::setFolderBox(945077, $task_title);
-
-		if($new === false){
-			$task_box = Crm::bxBoxCall('tasks.task.get', [
-				'taskId' => $task_box_id,
-				'select' => ['ID', 'UF_*']
-			]);
-
-			if(!empty($task_box['ufTaskWebdavFiles'])){
-				$task_files_box = [];
-				foreach($task_box['ufTaskWebdavFiles'] as $key => $file_box_id){
-					$file_box_info = Disk::getFile($file_box_id, 'box');
-					$task_files_box[] = $file_box_info['NAME'];
-				}
-			}
-
-			unset($task_box);
-		}*/
-
 		$files_box = [];
 		$insert_task_files = [];
 		foreach($task_files as $key => $file_cloud_id){
@@ -322,20 +380,6 @@ class Task extends Model{
 			}
 
 			unset($file_cloud_info);
-
-			//Проверить существует ли файл (чтобы не загружать повторно)
-			/*if(!empty($task_files_box)){
-				$has_file_box = in_array($file_cloud_info['NAME'], $task_files_box);
-			}
-
-			//Добавляем файл
-			if(empty($has_file_box)){
-				$file_box = Disk::setFileBox($folder_id, $file_cloud_info['NAME'], $file_cloud_info['DOWNLOAD_URL']);
-				$files_box[] = $file_box['ID'];
-			}
-
-			unset($file_cloud_info);
-			unset($task_files_box);*/
 		}
 
 		if(!empty($insert_task_files)){
@@ -343,26 +387,6 @@ class Task extends Model{
 			unset($insert_task_files);
 			unset($task_files);
 		}
-
-
-		//Добавить файлы к задаче
-		/*if(!empty($files_box)){
-			$box_batch_list = [];
-			foreach($files_box as $key => $file_id){
-				$box_batch_list[] = [
-					'method' => 'tasks.task.files.attach',
-					'params' => [
-						'taskId' => $task_box_id,
-						'fileId' => $file_id
-					]
-				];
-			}
-
-			Crm::bxBoxCallBatch($box_batch_list);
-
-			unset($files_box);
-			unset($box_batch_list);
-		}*/
 	}
 
 	public static function handlerFields($task = []){

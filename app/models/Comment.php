@@ -64,6 +64,35 @@ class Comment extends Model{
 		}
 	}
 
+	public static function setTaskCommentsBoxFromTable($task_id){
+		$has_comments = Capsule::table('comments_data')->where('task_old_id', $task_id);
+
+		if($has_comments->exists()){
+			foreach($has_comments->get() as $comment){
+				$comment_data = [];
+
+				$comment_data['AUTHOR_ID'] = 1;
+				$comment_data['POST_DATE'] = $comment->post_date;
+				if(!empty($comment->post_message)){
+					$comment_data['POST_MESSAGE'] = $comment->post_message;
+				}
+
+				$has_comments_file = Capsule::table('comments_files')->where('comments_old_id', $comment->old_id);
+				if($has_comments_file->exists()){
+					$comment_data['UF_FORUM_MESSAGE_DOC'] = [];
+					foreach($has_comments_file->get() as $file){
+						$comment_data['UF_FORUM_MESSAGE_DOC'][] = 'n' . $file->id;
+					}
+				}
+
+				$comment_add = Crm::bxBoxCall('task.commentitem.add', [$task_id, $comment_data]);
+				$comment_box_id = $comment_add['result']['ID'];
+
+				Capsule::table('comments_data')->where('id', $comment->id)->update(['new_id' => $comment_box_id]);
+			}
+		}
+	}
+
 	public static function getTaskComments($task_id, $box = false){
 		$params = [$task_id, ['ID' => 'asc'], []];
 
