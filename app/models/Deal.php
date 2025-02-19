@@ -1243,4 +1243,115 @@ class Deal extends Model{
 
 		self::setBoxDealBiz($next);*/
 	}
+
+	public static function compareDealBoxID($start = 0){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
+
+		#UF_CRM_1656395923 пр 26/29
+		#UF_CRM_1656395958 пц 27/0
+		#UF_CRM_1656395994 уч 28
+		#UF_CRM_1698743447 ау 44
+
+		$field = 'UF_CRM_1698743447';
+		$category_id = 44;
+
+		$deals = Crm::bxBoxCall('crm.deal.list', [
+			'select' => ['ID', $field],
+			'filter' => ['CATEGORY_ID' => $category_id],
+			'start' => $start
+		]);
+
+		if(!empty($deals['next'])) $next = $deals['next'];
+
+		$batch = [];
+		foreach($deals['result'] as $deal){
+			$deal_id = $deal['ID'];
+
+			if($deal[$field] != $deal_id){
+				$field_data = $deal[$field];
+
+				$batch[] = [
+					'method' => 'crm.deal.update',
+					'params' => [
+						'ID' => $deal_id,
+						'fields' => [$field => $deal_id],
+						'params' => ['REGISTER_SONET_EVENT' => 'N', 'REGISTER_HISTORY_EVENT' => 'N']
+					]
+				];
+
+				switch($category_id){
+					case 26:
+					case 29:
+						$column = 'deal_sale_id';
+						break;
+					case 27:
+					case 0:
+						$column = 'deal_procedure_id';
+						break;
+					case 20:
+						$column = 'deal_uchet_id';
+						break;
+					case 44:
+						$column = 'deal_procau_id';
+						break;
+					default:
+						$column = 'deal_sale_id';
+						break;
+				}
+
+				$has_deal_finuchet = Capsule::table('fin_deals')->where($column, $field_data);
+				if($has_deal_finuchet->exists()){
+					$deals_finuchet = $has_deal_finuchet;
+
+					$deals_finuchet_data = $deals_finuchet->first();
+
+					$box_deal_id_update = [];
+					if(!empty($deals_finuchet_data->deal_sale_id)) $box_deal_id_update[] = $deals_finuchet_data->deal_sale_id;
+					if(!empty($deals_finuchet_data->deal_procedure_id)) $box_deal_id_update[] = $deals_finuchet_data->deal_procedure_id;
+					if(!empty($deals_finuchet_data->deal_uchet_id)) $box_deal_id_update[] = $deals_finuchet_data->deal_uchet_id;
+					//if(!empty($deals_finuchet_data->deal_procau_id)) $box_deal_id_update[] = $deals_finuchet_data->deal_procau_id;
+
+					if(!empty($box_deal_id_update)){
+						$deals_for_update = Crm::bxBoxCall('crm.deal.list', [
+							'select' => ['ID', $field],
+							'filter' => ['@ID' => $box_deal_id_update],
+						]);
+
+						if(!empty($deals_for_update['result'])){
+							$box_batch_list = [];
+							foreach($deals_for_update['result'] as $box_deal){
+								$box_batch_list[] = [
+									'method' => 'crm.deal.update',
+									'params' => [
+										'ID' => $box_deal['ID'],
+										'fields' => [$field => $deal_id]
+									]
+								];
+							}
+
+							Crm::bxBoxCallBatch($box_batch_list);
+							unset($box_batch_list);
+							unset($deals_for_update);
+							unset($box_deal_id_update);
+						}
+					}
+
+					$has_deal_finuchet->update([$column => $deal['ID']]);
+				}
+			}
+		}
+
+		if(!empty($batch)){
+			Crm::bxCloudCallBatch($batch);
+			unset($batch);
+			unset($deals);
+		}
+
+		if(empty($next)){
+			print("Сопоставление ID сделок завершено!");
+			return true;
+		}
+
+		self::compareDealBoxID($next);
+	}
 }

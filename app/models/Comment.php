@@ -75,6 +75,8 @@ class Comment extends Model{
 				$comment_data['POST_DATE'] = $comment->post_date;
 				if(!empty($comment->post_message)){
 					$comment_data['POST_MESSAGE'] = $comment->post_message;
+				} else {
+					$comment_data['POST_MESSAGE'] = '';
 				}
 
 				$has_comments_file = Capsule::table('comments_files')->where('comments_old_id', $comment->old_id);
@@ -86,11 +88,75 @@ class Comment extends Model{
 				}
 
 				$comment_add = Crm::bxBoxCall('task.commentitem.add', [$task_id, $comment_data]);
-				$comment_box_id = $comment_add['result']['ID'];
+				if(!empty($comment_add['result'])){
+					$comment_box_id = $comment_add['result'];
 
-				Capsule::table('comments_data')->where('id', $comment->id)->update(['new_id' => $comment_box_id]);
+					Capsule::table('comments_data')->where('id', $comment->id)->update(['new_id' => $comment_box_id]);
+				} else {
+					print_r($comment_add);
+				}
+
 			}
 		}
+	}
+
+	public static function fillingСommentsToBox($start = 0){
+		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
+		Capsule::table('counters')->where('type', 'comments')->update(['start' => $start]);
+
+		$count = Capsule::table('comments_data')->count();
+		$comments = Capsule::table('comments_data')->offset($start)->limit(10)->get();
+
+		if($start < $count) $next = $start + 10;
+
+		if(!empty($comments)){
+			foreach($comments as $comment){
+				$has_comment_box = self::where('old_id', $comment->old_id);
+
+				if($has_comment_box->exists()){
+					$comment_box_id = $has_comment_box->value('new_id');
+					$has_comment_files = Capsule::table('comments_files')->where('comments_old_id', $comment->old_id);
+
+					//Если файлы есть
+					if($has_comment_files->exists()){
+						$count_comment_files = $has_comment_files->count();
+
+						$task_box_id = Capsule::table('comments_data')->leftJoin('tasks_data')
+
+						$has_comment_box_files = self::getTaskCommentsBox($task_box_id, $comment_box_id);
+
+						if($count_comment_files > 0){
+							if(!empty($has_task_box_files['ufTaskWebdavFiles'])){
+								if(count($has_task_box_files['ufTaskWebdavFiles']) != $count_task_files){
+									foreach($has_comment_files->get() as $file){
+										self::setTaskFilesAttached($task_box_id, $file->new_id);
+									}
+								}
+							} else {
+								foreach($has_comment_files->get() as $file){
+									self::setTaskFilesAttached($task_box_id, $file->new_id);
+								}
+							}
+						}
+					}
+				} else {
+					#
+				}
+			}
+
+			unset($comments);
+		}
+
+		if(empty($next)){
+			print("Загрузка комментариев завершена!\r\n");
+			return true;
+		}
+
+		self::fillingСommentsToBox($next);
+	}
+
+	public static function getTaskCommentsBox($task_id, $comment_id){
+		$result = Crm::bxBoxCall('task.commentitem.get', [$task_id, $comment_id]);
 	}
 
 	public static function getTaskComments($task_id, $box = false){

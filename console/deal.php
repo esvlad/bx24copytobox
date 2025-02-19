@@ -28,7 +28,7 @@ use Esvlad\Bx24copytobox\Models\Deal;
 //Deal::updateCloudDealsToBox();
 //Deal::getContactIdByDeal();
 //Deal::hasContactIdByDeal();
-Deal::hasContactIdsByDeal();
+//Deal::hasContactIdsByDeal();
 //Deal::setObservers();
 //Deal::exportDate();
 //Deal::replacement();
@@ -36,4 +36,6 @@ Deal::hasContactIdsByDeal();
 //Deal::replacementDealIdInFields();
 //Deal::setBoxDealBiz();
 //Deal::hasBoxFolderClient();
+//Deal::compareDealBoxID();
+
 print("Заполнение Базы данных сделок завершен!");

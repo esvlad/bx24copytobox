@@ -225,12 +225,12 @@ class Task extends Model{
 		return false;
 	}
 
-	public static function setTaskBoxFromTable($start = 33380){
+	public static function setTaskBoxFromTable($start = 410){ //33380
 		print(date('d.m.Y H:i:s') . " Выполнено шагов - " . $start . "\r\n");
 		Capsule::table('counters')->where('type', 'task')->update(['start' => $start]);
 
-		$count = Capsule::table('tasks_data')->count();
-		$tasks = Capsule::table('tasks_data')->offset($start)->limit(10)->get();
+		$count = Capsule::table('tasks_data')->whereNull('new_id')->count();
+		$tasks = Capsule::table('tasks_data')->whereNull('new_id')->offset($start)->limit(10)->get();
 
 		if($start < $count) $next = $start + 10;
 
@@ -241,7 +241,7 @@ class Task extends Model{
 				//Если задача есть
 				if($has_task_box->exists()){
 					$task_box_id = $has_task_box->value('new_id');
-					$has_task_files = Capsule::table('tasks_files')->where('task_old_id', $task_box_id);
+					$has_task_files = Capsule::table('tasks_files')->where('task_old_id', $task->old_id);
 
 					//Если файлы есть
 					if($has_task_files->exists()){
@@ -295,10 +295,10 @@ class Task extends Model{
 						$task_data['UF_CRM_TASK'] = $task->uf_crm_type . '_' .  $task->uf_crm_id;
 					}
 
-					$has_task_files = Capsule::table('tasks_files')->where('task_old_id', $task_box_id);
+					$has_task_files = Capsule::table('tasks_files')->where('task_old_id', $task->old_id);
 					if($has_task_files->exists()){
 						$uf_task_webdav_files = [];
-						foreach($task_files->get() as $file){
+						foreach($has_task_files->get() as $file){
 							$uf_task_webdav_files[] = 'n' . $file->new_id;
 						}
 					}
