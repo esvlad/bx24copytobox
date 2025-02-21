@@ -36,6 +36,6 @@ use Esvlad\Bx24copytobox\Models\Deal;
 //Deal::replacementDealIdInFields();
 //Deal::setBoxDealBiz();
 //Deal::hasBoxFolderClient();
-//Deal::compareDealBoxID();
+Deal::compareDealBoxID();
 
 print("Заполнение Базы данных сделок завершен!");

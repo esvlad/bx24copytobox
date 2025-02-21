@@ -1261,23 +1261,25 @@ class Deal extends Model{
 			'start' => $start
 		]);
 
-		if(!empty($deals['next'])) $next = $deals['next'];
+		//if(!empty($deals['next'])) $next = $deals['next'];
 
 		$batch = [];
 		foreach($deals['result'] as $deal){
 			$deal_id = $deal['ID'];
 
-			if($deal[$field] != $deal_id){
+			if($deal[$field] == $deal_id){
+				//print("Сделка - " . $deal_id . " : " . $deal[$field] . "\r\n");
+
 				$field_data = $deal[$field];
 
-				$batch[] = [
+				/*$batch[] = [
 					'method' => 'crm.deal.update',
 					'params' => [
 						'ID' => $deal_id,
 						'fields' => [$field => $deal_id],
 						'params' => ['REGISTER_SONET_EVENT' => 'N', 'REGISTER_HISTORY_EVENT' => 'N']
 					]
-				];
+				];*/
 
 				switch($category_id){
 					case 26:
@@ -1299,53 +1301,19 @@ class Deal extends Model{
 						break;
 				}
 
+				print("Сделка - " . $deal_id . "; fin_deals column: " . $column . " field_data: " . $field_data . "\r\n");
 				$has_deal_finuchet = Capsule::table('fin_deals')->where($column, $field_data);
-				if($has_deal_finuchet->exists()){
-					$deals_finuchet = $has_deal_finuchet;
-
-					$deals_finuchet_data = $deals_finuchet->first();
-
-					$box_deal_id_update = [];
-					if(!empty($deals_finuchet_data->deal_sale_id)) $box_deal_id_update[] = $deals_finuchet_data->deal_sale_id;
-					if(!empty($deals_finuchet_data->deal_procedure_id)) $box_deal_id_update[] = $deals_finuchet_data->deal_procedure_id;
-					if(!empty($deals_finuchet_data->deal_uchet_id)) $box_deal_id_update[] = $deals_finuchet_data->deal_uchet_id;
-					//if(!empty($deals_finuchet_data->deal_procau_id)) $box_deal_id_update[] = $deals_finuchet_data->deal_procau_id;
-
-					if(!empty($box_deal_id_update)){
-						$deals_for_update = Crm::bxBoxCall('crm.deal.list', [
-							'select' => ['ID', $field],
-							'filter' => ['@ID' => $box_deal_id_update],
-						]);
-
-						if(!empty($deals_for_update['result'])){
-							$box_batch_list = [];
-							foreach($deals_for_update['result'] as $box_deal){
-								$box_batch_list[] = [
-									'method' => 'crm.deal.update',
-									'params' => [
-										'ID' => $box_deal['ID'],
-										'fields' => [$field => $deal_id]
-									]
-								];
-							}
-
-							Crm::bxBoxCallBatch($box_batch_list);
-							unset($box_batch_list);
-							unset($deals_for_update);
-							unset($box_deal_id_update);
-						}
-					}
-
+				/*if($has_deal_finuchet->exists()){
 					$has_deal_finuchet->update([$column => $deal['ID']]);
-				}
+				}*/
 			}
 		}
 
-		if(!empty($batch)){
-			Crm::bxCloudCallBatch($batch);
+		/*if(!empty($batch)){
+			Crm::bxBoxCallBatch($batch);
 			unset($batch);
 			unset($deals);
-		}
+		}*/
 
 		if(empty($next)){
 			print("Сопоставление ID сделок завершено!");
